@@ -1,6 +1,7 @@
 module.exports.salonService = require('./salon.service')
 module.exports.themeService = require('./theme.service')
 module.exports.subscriptionService = require('./subscription.service')
-module.exports.categoryTypeService = require('./categorytype.service')
+module.exports.categoryService = require('./category.service')
 module.exports.expenseTypeService = require('./expensetype.service')
 module.exports.assignSubscriptionService = require('./assignsubscription.service')
+module.exports.currencyService = require('./currency.service')

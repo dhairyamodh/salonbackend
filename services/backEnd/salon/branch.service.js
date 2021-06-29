@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const Salon = require('../../../models/backEnd/superAdmin/Salon.model');
+const { Salon } = require('../../../models/backEnd/superAdmin');
 const getBranchCode = (salonName, lastBranchCode) => {
     return `${salonName
         .split(" ")

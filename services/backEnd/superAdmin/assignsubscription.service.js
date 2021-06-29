@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
-const Salon = require('../../../models/backEnd/superAdmin/salon.model')
-const Subscription = require('../../../models/backEnd/superAdmin/subscription.model')
+const { Salon, Subscription } = require('../../../models/backEnd/superAdmin')
 const moment = require('moment')
 
 const create = async (data) => {

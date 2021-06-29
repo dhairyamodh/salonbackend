@@ -1,6 +1,6 @@
 module.exports.salonUserService = require('./salonuser.service')
 module.exports.branchService = require('./branch.service')
-module.exports.salonCategoryService = require('./saloncategory.service')
+module.exports.categoryService = require('./category.service')
 module.exports.serviceService = require('./service.service')
 // module.exports.hotKeyService = require('./hotkey.service')
 // module.exports.tableService = require('./table.service')

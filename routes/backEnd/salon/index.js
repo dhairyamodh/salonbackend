@@ -3,7 +3,7 @@ const branch = require('./branch.route')
 const router = express.Router();
 const verify = require('../../../middlewares/verifyToken')
 const salonuser = require('./salonuser.route')
-const saloncategory = require('./saloncategory.route')
+const category = require('./category.route')
 const services = require('./service.route')
 // const hotkey = require('./hotkey.route')
 // const table = require('./table.route')
@@ -15,7 +15,7 @@ const dashboard = require('./dashboard.route')
 
 router.use('/branches', verify, branch);
 router.use('/users', verify, salonuser);
-router.use('/saloncategory', verify, saloncategory);
+router.use('/category', category);
 router.use('/services', verify, services);
 // router.use('/hotkeys', verify, hotkey);
 // router.use('/tables', verify, table);

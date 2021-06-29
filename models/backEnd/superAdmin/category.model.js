@@ -26,6 +26,6 @@ const categorySchema = mongoose.Schema(
 categorySchema.plugin(toJSON);
 categorySchema.plugin(paginate);
 
-const Category = mongoose.model('Category', categorySchema);
+const Category = mongoose.models['Category'] || mongoose.model('Category', categorySchema);
 
 module.exports = Category;

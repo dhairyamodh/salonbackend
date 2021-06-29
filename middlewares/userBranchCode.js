@@ -1,5 +1,4 @@
-const Salon = require("../models/backEnd/superAdmin/salon.model");
-const Theme = require("../models/backEnd/superAdmin/theme.model");
+const { Salon, Theme } = require("../models/backEnd/superAdmin");
 
 const getUserBranchCode = async (user) => {
     if (user.branchId) {

@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const bcrypt = require("bcryptjs");
 const User = require('../../../models/user.model');
-const Salon = require('../../../models/backEnd/superAdmin/Salon.model');
+const { Salon } = require('../../../models/backEnd/superAdmin');
 const all = async (salonId, branchId, status) => {
     try {
         const data = { ...(salonId != 'all' && { salonId: ObjectId(salonId) }), ...(branchId != 'all' && { branchId: ObjectId(branchId) }), ...status }

@@ -1,24 +1,24 @@
 const catchAsync = require('../../../utils/catchAsync');
-const { categoryTypeService } = require('../../../services/backEnd/superadmin');
-const { statusCheck } = require('../../../commonFunction/objectList')
+const { currencyService } = require('../../../services/backEnd/superAdmin');
+const { statusCheck } = require('../../../commonFunction/functionList')
 
 const all = catchAsync(async (req, res) => {
-    const response = await categoryTypeService.all(req.query.resId, statusCheck(req.query.status));
+    const response = await currencyService.all(req.query.type, statusCheck(req.query.status));
     res.status(response.status).send(response);
 });
 
 const create = catchAsync(async (req, res) => {
-    const response = await categoryTypeService.create(req.body, req.files);
+    const response = await currencyService.create(req.body);
     res.status(response.status).send(response);
 });
 
 const update = catchAsync(async (req, res) => {
-    const response = await categoryTypeService.update(req.body, req.files);
+    const response = await currencyService.update(req.body);
     res.status(response.status).send(response);
 });
 
 const remove = catchAsync(async (req, res) => {
-    const response = await categoryTypeService.remove(req.body.id);
+    const response = await currencyService.remove(req.body.id);
     res.status(response.status).send(response);
 });
 

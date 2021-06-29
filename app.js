@@ -12,6 +12,7 @@ const path = require('path');
 const { setallrestaurantdb } = require('./config/setrestaurantdb');
 const httpStatus = require('http-status');
 const salonRoutes = require('./routes//backEnd/salon')
+const websiteRoutes = require('./routes/frontEnd')
 const { authLimiter } = require('./middlewares/rateLimiter');
 
 
@@ -51,11 +52,12 @@ global.restaurantdbconn = [];
 
 app.use(setallrestaurantdb());
 
-app.use('/api', authLimiter, routes);
+app.use('/api', routes);
 
-app.use('/api/superadmin', authLimiter, superAdminRoutes);
+app.use('/api/superadmin', superAdminRoutes);
 
-app.use('/api/salon', authLimiter, salonRoutes)
+app.use('/api/salon', salonRoutes)
+app.use('/api/', websiteRoutes)
 
 // app.use((req, res, next) => {
 //   console.log(global.restaurants);

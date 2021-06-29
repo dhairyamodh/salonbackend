@@ -4,7 +4,9 @@ const { branchCategorySchema } = require('./Branchcategory.model')
 const { salonServiceSchema } = require('./salonservice.model')
 const { branchServiceSchema } = require('./branchservice.model')
 const { salonUserSchema } = require('./salonuser.model')
-const { orderSchema } = require('./order.model')
+const { orderSchema } = require('./order.model');
+const { customerSchema } = require('./customer.model');
+const { cartSchema } = require('./Cart.model');
 
 module.exports = {
     Branch: branchSchema,
@@ -13,5 +15,7 @@ module.exports = {
     SalonService: salonServiceSchema,
     BranchService: branchServiceSchema,
     SalonUser: salonUserSchema,
-    Order: orderSchema
+    Order: orderSchema,
+    Customer: customerSchema,
+    Cart: cartSchema
 }

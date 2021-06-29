@@ -1,9 +1,9 @@
 const httpStatus = require('http-status');
-const { CategoryType } = require('../../../models/backEnd/superadmin');
+const { Category } = require('../../../models/backEnd/superadmin');
 
 const all = async (resId, status) => {
     try {
-        const result = await CategoryType.find(status)
+        const result = await Category.find(status)
         return ({ status: httpStatus.OK, data: result })
     } catch (error) {
         console.log(error);
@@ -20,8 +20,8 @@ const create = async (data, files) => {
         } else {
             data.categoryImage = "uploaded/restaurants/category/res_logo.png";
         }
-        await CategoryType.create(data)
-        return ({ status: httpStatus.OK, message: 'CategoryType Added Successfully' })
+        await Category.create(data)
+        return ({ status: httpStatus.OK, message: 'Category Added Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
@@ -34,8 +34,8 @@ const update = async (data, files) => {
                 data.categoryImage = file.destination + '/' + file.filename
             })
         }
-        await CategoryType.findByIdAndUpdate(data._id || data.id, data);
-        return ({ status: httpStatus.OK, message: 'CategoryType Updated Successfully' })
+        await Category.findByIdAndUpdate(data._id || data.id, data);
+        return ({ status: httpStatus.OK, message: 'Category Updated Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }
@@ -43,8 +43,8 @@ const update = async (data, files) => {
 
 const remove = async (data) => {
     try {
-        await CategoryType.findByIdAndDelete(data);
-        return ({ status: httpStatus.OK, message: 'CategoryType Deleted Successfully' })
+        await Category.findByIdAndDelete(data);
+        return ({ status: httpStatus.OK, message: 'Category Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
     }

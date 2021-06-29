@@ -41,7 +41,7 @@ const login = async (data) => {
 
         const validPassword = await bcrypt.compare(data.password, user.password);
         if (!validPassword)
-            return ({ status: httpStatus.NOT_FOUND, message: "Invalid password" });
+            return ({ status: httpStatus.NOT_FOUND, message: "Incorrect password" });
         const token = jwt.sign({ _id: user._id, salon: user.salonId }, process.env.JWT_SECRET);
 
         const newuser = await getUserBranchCode(user)

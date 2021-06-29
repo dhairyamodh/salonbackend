@@ -1,0 +1,5 @@
+module.exports.salonService = require('./salon.service')
+module.exports.categoryService = require('./category.service')
+module.exports.serviceService = require('./service.service')
+module.exports.authService = require('./auth.service')
+module.exports.cartService = require('./cart.service')

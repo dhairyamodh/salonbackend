@@ -63,6 +63,11 @@ const salonSchema = mongoose.Schema(
             type: Number,
             require: false,
         },
+        currencyId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'Currency',
+            required: true,
+        },
         subscription: {
             subscriptionId: {
                 type: mongoose.SchemaTypes.ObjectId,

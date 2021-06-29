@@ -1,6 +1,6 @@
 const catchAsync = require('../../../utils/catchAsync');
 const { serviceService } = require('../../../services/backEnd/salon');
-const { statusCheck } = require('../../../commonFunction/objectList')
+const { statusCheck } = require('../../../commonFunction/functionList')
 
 
 const all = catchAsync(async (req, res) => {

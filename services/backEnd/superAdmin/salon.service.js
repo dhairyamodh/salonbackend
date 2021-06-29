@@ -1,6 +1,5 @@
 const httpStatus = require("http-status");
-const Salon = require('../../../models/backEnd/superAdmin/salon.model')
-const Subscription = require('../../../models/backEnd/superAdmin/subscription.model')
+const { Salon, Subscription, Theme } = require('../../../models/backEnd/superAdmin')
 const { salonValidation } = require("../../../validations/backEnd/superAdmin");
 
 const moment = require("moment");
@@ -45,6 +44,24 @@ const all = async (status) => {
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
   }
 };
+
+const getSalonById = async (salonId, branchId, status) => {
+  try {
+    const salon = await Salon.findById(salonId)
+    const theme = await Theme.findById(salon.themeId)
+    let category
+    if (global.salons[salonId] != undefined || salonId) {
+      category = await global.salons[salonId].SalonCategory.find(status)
+    }
+    else if (branchId != undefined) {
+      category = await global.salons[salonId].BranchCategory.find(status)
+    }
+    return ({ status: httpStatus.OK, data: { ...salon._doc, primaryColor: theme.primaryColor, secondaryColor: theme.secondaryColor } })
+  } catch (error) {
+    console.log(error);
+    return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
+  }
+}
 
 const create = async (data, files) => {
   try {
@@ -141,6 +158,7 @@ const remove = async (data) => {
 
 module.exports = {
   all,
+  getSalonById,
   create,
   update,
   remove,

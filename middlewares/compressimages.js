@@ -14,7 +14,6 @@ async function compressimage(req, res, next) {
         destination: './uploaded/Sandwich/',
         plugins: [imageminJpegtran()]
     });
-    console.log("compress", compress);
     next()
 }
 

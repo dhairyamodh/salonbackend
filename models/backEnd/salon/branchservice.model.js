@@ -18,21 +18,25 @@ const branchServiceSchema = mongoose.Schema(
             ref: 'SalonCategory',
             required: false,
         },
-        serviceName: {
+        name: {
             type: String,
             required: true,
         },
-        serviceImage: {
+        imageSrc: {
             type: String,
             required: true,
         },
-        servicePrice: {
+        price: {
             type: Number,
             require: true
         },
         estimatedTime: {
             type: String,
             require: true
+        },
+        serviceDescription: {
+            type: String,
+            required: false,
         },
         status: {
             type: Boolean,

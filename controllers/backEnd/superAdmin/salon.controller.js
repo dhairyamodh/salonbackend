@@ -1,10 +1,15 @@
 const catchAsync = require("../../../utils/catchAsync");
 const { salonService } = require("../../../services/backEnd/superAdmin");
 const { setrestaurantdb } = require("../../../config/setrestaurantdb");
-const { statusCheck } = require("../../../commonFunction/objectList");
+const { statusCheck } = require("../../../commonFunction/functionList");
 
 const all = catchAsync(async (req, res) => {
   const response = await salonService.all(statusCheck(req.query.status));
+  res.status(response.status).send(response);
+});
+
+const getSalonById = catchAsync(async (req, res) => {
+  const response = await salonService.getSalonById(req.query.salonId, req.query.branchId, statusCheck(true));
   res.status(response.status).send(response);
 });
 
@@ -32,6 +37,7 @@ const remove = catchAsync(async (req, res) => {
 
 module.exports = {
   all,
+  getSalonById,
   create,
   update,
   remove,

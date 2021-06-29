@@ -1,6 +1,6 @@
 const catchAsync = require('../../../utils/catchAsync');
 const { subscriptionService } = require('../../../services/backEnd/superadmin');
-const { statusCheck } = require('../../../commonFunction/objectList')
+const { statusCheck } = require('../../../commonFunction/functionList')
 
 const all = catchAsync(async (req, res) => {
     const response = await subscriptionService.all(statusCheck(req.query.status));

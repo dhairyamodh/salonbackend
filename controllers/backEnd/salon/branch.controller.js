@@ -1,6 +1,6 @@
 const catchAsync = require('../../../utils/catchAsync');
 const { branchService } = require('../../../services/backEnd/salon');
-const { statusCheck } = require('../../../commonFunction/objectList');
+const { statusCheck } = require('../../../commonFunction/functionList');
 
 
 const getBranchBySalonId = catchAsync(async (req, res) => {

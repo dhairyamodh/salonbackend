@@ -5,6 +5,13 @@ const objectId = (value, helpers) => {
   return value;
 };
 
+const mobile = (value, helpers) => {
+  if (value.length <= 10) {
+    return helpers.message('mobile must be at least 10 digit');
+  }
+  return value;
+}
+
 const password = (value, helpers) => {
   if (value.length < 8) {
     return helpers.message('password must be at least 8 characters');
@@ -18,4 +25,5 @@ const password = (value, helpers) => {
 module.exports = {
   objectId,
   password,
+  mobile
 };

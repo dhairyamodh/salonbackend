@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const moment = require('moment')
-const Salon = require('../../../models/backEnd/superAdmin/Salon.model');
+const { Salon } = require('../../../models/backEnd/superAdmin');
 const getFormattedDate = (date, format) => {
     return moment(date).utcOffset("+05:30").format(format);
 };

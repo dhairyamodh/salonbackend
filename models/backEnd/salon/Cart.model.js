@@ -13,10 +13,15 @@ const cartSchema = mongoose.Schema(
             ref: 'Branch',
             required: false,
         },
-        products: {
-            type: Array,
+        customerId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'Customer',
             required: true,
         },
+        items: {
+            type: Array,
+            require: true
+        }
     },
     {
         timestamps: true,

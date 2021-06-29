@@ -27,6 +27,6 @@ const expenseTypeSchema = mongoose.Schema(
 expenseTypeSchema.plugin(toJSON);
 expenseTypeSchema.plugin(paginate);
 
-const ExpenseType = mongoose.model('ExpenseType', expenseTypeSchema);
+const ExpenseType = mongoose.models['ExpenseType'] || mongoose.model('ExpenseType', expenseTypeSchema);
 
 module.exports = ExpenseType;

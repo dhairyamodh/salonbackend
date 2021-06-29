@@ -40,6 +40,10 @@ const userSchema = mongoose.Schema(
       ref: 'branches',
       required: false,
     },
+    address: {
+      type: String,
+      require: false
+    },
     role: {
       type: String,
       default: 'superadmin',

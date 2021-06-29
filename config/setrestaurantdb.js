@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-const Salon = require("../models/backEnd/superAdmin/salon.model");
+const { Salon } = require("../models/backEnd/superAdmin");
 const models = require("../models/backEnd/salon");
 
 async function setrestaurantdb(salonId, next) {

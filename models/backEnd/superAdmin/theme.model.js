@@ -29,6 +29,6 @@ const themeSchema = mongoose.Schema(
 themeSchema.plugin(toJSON);
 themeSchema.plugin(paginate);
 
-const Theme = mongoose.model('Theme', themeSchema);
+const Theme = mongoose.models['Theme'] || mongoose.model('Theme', themeSchema);
 
 module.exports = Theme;
