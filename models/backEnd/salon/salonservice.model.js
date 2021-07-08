@@ -21,7 +21,15 @@ const salonServiceSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        salePrice: {
+            type: Number,
+            require: true
+        },
         price: {
+            type: Number,
+            require: true
+        },
+        discount: {
             type: Number,
             require: true
         },

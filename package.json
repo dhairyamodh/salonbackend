@@ -35,6 +35,7 @@
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
     "pm2": "^4.5.4",
+    "tinycolor2": "^1.4.2",
     "validator": "^13.5.2",
     "winston": "^3.3.3",
     "xss-clean": "^0.1.1"

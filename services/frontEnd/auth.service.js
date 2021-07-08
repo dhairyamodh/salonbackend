@@ -58,11 +58,14 @@ const login = async (data) => {
 }
 
 const details = async (data) => {
-    let user = await User.findOne({ _id: data });
-    if (!user) {
+    try {
+        const user = await User.findById(data);
+        return ({ status: httpStatus.OK, user: user, message: "User details found successfully" });
+
+    } catch (error) {
         return ({ status: httpStatus.NOT_FOUND, message: "user does not exist" });
+
     }
-    return ({ status: httpStatus.OK, user: user, message: "User details found successfully" });
 }
 
 const forgotpassword = async (data) => {

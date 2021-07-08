@@ -2,7 +2,6 @@ const catchAsync = require('../../utils/catchAsync');
 const { cartService } = require('../../services/frontEnd');
 
 const getCart = catchAsync(async (req, res) => {
-    console.log('global.salons', global.salons[req.query.salonId], req.query);
     const response = await cartService.getCart(global.salons[req.query.salonId], req.query);
     res.status(response.status).send(response);
 });

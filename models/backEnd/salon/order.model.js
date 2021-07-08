@@ -26,10 +26,6 @@ const orderSchema = mongoose.Schema(
             type: String,
             require: false
         },
-        orderType: {
-            type: String,
-            require: false
-        },
         tableNumber: {
             type: String,
             require: false
@@ -76,6 +72,14 @@ const orderSchema = mongoose.Schema(
         },
         customerMobile: {
             type: String,
+            require: false
+        },
+        startDate: {
+            type: Date,
+            require: false
+        },
+        endDate: {
+            type: Date,
             require: false
         }
 

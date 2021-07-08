@@ -6,7 +6,6 @@ const categoryServices = async (db, branchId, categoryId, status, fetchLimit, pa
         const page = parseInt(pageNumber || 1);
         const limit = parseInt(fetchLimit);
         const skipIndex = page * limit;
-        console.log(limit, page, skipIndex);
 
         const data = { ...(branchId != undefined && { branchId: ObjectId(branchId) }), ...(categoryId != undefined && { categoryId: ObjectId(categoryId) }), ...status }
         const totalServices = branchId != undefined ? await db.BranchService.find(data).count() : await db.SalonService.find(data).count()

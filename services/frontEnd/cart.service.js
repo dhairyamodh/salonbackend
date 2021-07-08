@@ -49,20 +49,27 @@ const removeToCart = async (db, data) => {
 const transferCart = async (db, data) => {
     try {
         const cart = await db.Cart.findOne({ customerId: data.userId })
-        const newcart = cart.items.filter((cartItem) => {
-            const foundItem = data.items.findIndex((dataItem) =>
-                dataItem._id == cartItem._id
-            )
-            if (foundItem) {
+        let newcart = []
+        data.items.map((dataItem) => {
+            const found = cart.items.findIndex((cartItem) => {
+                return dataItem._id === cartItem._id
+            })
+            // console.log(found);
+            if (found > -1) {
+                dataItem.quantity += cart.items[found].quantity
+            }
+
+            newcart = [...newcart, dataItem]
+        })
+        // console.log('newcart', newcart.map((item) => item.quantity));
+        const filteresItems = cart.items.filter((cartItem) => {
+            if (data.items.find((dataItems) => dataItems._id === cartItem._id)) {
                 return false
             }
             return true
         })
-        console.log('newcart', newcart);
-        const updatedCart = [...newcart, ...data.items]
-        console.log('updatedCart', updatedCart);
+        const updatedCart = [...newcart, ...filteresItems]
         await db.Cart.findOneAndUpdate({ customerId: data.userId }, { ...data, items: updatedCart })
-
         return ({ status: httpStatus.OK, data: updatedCart })
     } catch (error) {
         console.log(error);

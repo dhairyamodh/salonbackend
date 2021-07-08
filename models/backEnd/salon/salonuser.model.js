@@ -13,6 +13,11 @@ const salonUserSchema = mongoose.Schema(
             ref: 'Branch',
             required: false,
         },
+        groupId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'SalonUserGroup',
+            required: false,
+        },
         userName: {
             type: String,
             required: true,

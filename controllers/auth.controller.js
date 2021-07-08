@@ -8,7 +8,7 @@ const login = catchAsync(async (req, res) => {
 
 const details = catchAsync(async (req, res) => {
     const result = await authService.details(req.userId);
-    return res.status(result.status).send(result)
+    return res.status(200).send(result)
 })
 
 const forgotpassword = catchAsync(async (req, res) => {

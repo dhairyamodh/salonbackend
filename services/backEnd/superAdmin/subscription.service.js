@@ -17,7 +17,6 @@ const all = async (status) => {
           subscriptionName: "$subscriptionName",
           subscriptionDuration: "$subscriptionDuration",
           subscriptionAmount: "$subscriptionAmount",
-
           status: "$status",
           subscription: "$$ROOT",
           subscribers: { $size: "$restaurants" },

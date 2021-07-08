@@ -17,7 +17,7 @@ const update = {
         branchName: Joi.string().required(),
         contactPerson: Joi.string().required(),
         contactNumber: Joi.string().required(),
-        status: Joi.string().required()
+        status: Joi.boolean().required()
     }).unknown(),
 };
 

@@ -37,6 +37,8 @@ const create = async (db, data, files) => {
         } else {
             data.imageSrc = "uploaded/restaurants/service/res_logo.png";
         }
+        const discount = 100 * (data.price - data.salePrice) / data.price;
+        data.discount = discount.toFixed(0)
         if (isSalonAdmin(data.role) ? await db.SalonService.findOne({ name: data.name }) : await db.BranchService.findOne({ name: data.name })) {
             return ({ status: httpStatus.NOT_FOUND, message: "Service name must be different!" })
         }
@@ -61,6 +63,9 @@ const update = async (db, data, files) => {
                 data.imageSrc = file.destination + '/' + file.filename
             })
         }
+        const discount = 100 * (data.price - data.salePrice) / data.price;
+        data.discount = discount.toFixed(0)
+        console.log(discount);
         if (isSalonAdmin(data.role)) {
             await db.SalonService.findByIdAndUpdate(data.id, { ...data, categoryId: data.categoryId != 'null' ? data.categoryId : undefined, itemPrice: parseInt(data.itemPrice) })
         } else {

@@ -9,6 +9,7 @@ const all = async (salonId, branchId, status) => {
         if (salonId == 'all') {
             await Promise.all(Object.values(global.salons).map(async (key, index) => {
                 const allusers = await key.SalonUser.aggregate([
+
                     {
                         $project: {
                             branchUser: '$$ROOT',
@@ -16,7 +17,10 @@ const all = async (salonId, branchId, status) => {
                             userRole: "$userRole",
                             salonId: '$salonId',
                             branchId: '$branchId',
+                            groupId: '$groupId',
                             userMobile: "$userMobile",
+                            groupName: '$groups.groupName',
+
                             status: "$status",
                         }
                     }
@@ -28,14 +32,17 @@ const all = async (salonId, branchId, status) => {
             users = await global.salons[salonId].SalonUser.aggregate([{
                 $match: data
             },
+
             {
                 $project: {
                     branchUser: '$$ROOT',
                     userName: "$userName",
                     userRole: "$userRole",
                     salonId: '$salonId',
+                    groupId: '$groupId',
                     branchId: '$branchId',
                     userMobile: "$userMobile",
+                    groupName: '$groups.groupName',
                     status: "$status",
                 }
             }
@@ -51,7 +58,10 @@ const all = async (salonId, branchId, status) => {
                 } else {
                     item.associatedWith = salon.name
                 }
-
+                if (item.groupId) {
+                    const group = await global.salons[item.salonId].SalonUserGroup.findById(item.groupId)
+                    item.groupName = group ? group.groupName : '-'
+                }
             }
             return { ...item }
         }))
@@ -69,10 +79,10 @@ const create = async (salonId, data) => {
         if (checkMobile.length > 0) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Mobile number already exist!, Please try another mobile number" })
         }
-        const restaurantUser = await global.salons[data.salonId].SalonUser.create({ ...data, userRole: data.role })
+        const salonUser = await global.salons[data.salonId].SalonUser.create({ ...data, userRole: data.role })
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(data.password, salt);
-        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, restaurantUserId: restaurantUser._id, salonId: data.salonId, branchId: data.branchId ? data.branchId : undefined })
+        await User.create({ name: data.userName, mobile: data.userMobile, password: hashPassword, role: data.role, salonUserId: salonUser._id, salonId: data.salonId, branchId: data.branchId ? data.branchId : undefined })
 
         return ({ status: httpStatus.OK, message: 'User Added Successfully' })
     } catch (error) {
@@ -85,7 +95,7 @@ const update = async (data) => {
     try {
         const checkMobile = await User.find({ mobile: data.userMobile })
         if (checkMobile.length > 0) {
-            const checkuser = await User.find({ mobile: data.userMobile, restaurantUserId: data._id })
+            const checkuser = await User.find({ mobile: data.userMobile, salonUserId: data._id })
 
             if (checkuser.length <= 0) {
                 return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Mobile number already exist!, Please try another mobile number" })
@@ -93,7 +103,7 @@ const update = async (data) => {
         }
 
         await global.salons[data.salonId].SalonUser.findByIdAndUpdate(data._id, data)
-        await User.findOneAndUpdate({ restaurantUserId: data._id }, { name: data.userName, mobile: data.userMobile })
+        await User.findOneAndUpdate({ salonUserId: data._id }, { name: data.userName, mobile: data.userMobile })
         return ({ status: httpStatus.OK, message: 'User Updated Successfully' })
     } catch (error) {
         console.log(error);
@@ -104,8 +114,8 @@ const update = async (data) => {
 const remove = async (data) => {
     try {
         await global.salons[data.salonId].SalonUser.findByIdAndDelete(data._id)
-        await global.salons[data.salonId].SalonUser.findOneAndDelete({ restaurantUserId: data._id })
-        await User.findOneAndDelete({ restaurantUserId: data._id });
+        await global.salons[data.salonId].SalonUser.findOneAndDelete({ salonUserId: data._id })
+        await User.findOneAndDelete({ salonUserId: data._id });
         return ({ status: httpStatus.OK, message: 'User Deleted Successfully' })
     } catch (error) {
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
