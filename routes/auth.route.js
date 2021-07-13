@@ -14,13 +14,18 @@ function delay(req, res, next) {
   }, 5000);
 }
 router.post("/register", async (req, res) => {
+  // console.log("register", req.body);
   const data = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(data.password, salt);
   await User.create({ ...data, password: hashPassword });
   res.send({ status: httpStatus.OK, message: "Created admin" });
 });
-router.post("/login", validate(authValidation.adminlogin), authController.login);
+router.post(
+  "/login",
+  validate(authValidation.adminlogin),
+  authController.login
+);
 router.get("/details", verify, authController.details);
 router.post("/forgotpassword", authController.forgotpassword);
 router.put("/forgotpassword", authController.changeForgotPassword);

@@ -9,7 +9,11 @@ const all = catchAsync(async (req, res) => {
 });
 
 const getSalonById = catchAsync(async (req, res) => {
-  const response = await salonService.getSalonById(req.query.salonId, req.query.branchId, statusCheck(true));
+  const response = await salonService.getSalonById(
+    req.query.salonId,
+    req.query.branchId,
+    statusCheck(true)
+  );
   res.status(response.status).send(response);
 });
 

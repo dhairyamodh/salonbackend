@@ -1,5 +1,9 @@
 const httpStatus = require("http-status");
-const { Salon, Subscription, Theme } = require('../../../models/backEnd/superAdmin')
+const {
+  Salon,
+  Subscription,
+  Theme,
+} = require("../../../models/backEnd/superAdmin");
 const { salonValidation } = require("../../../validations/backEnd/superAdmin");
 
 const moment = require("moment");
@@ -15,9 +19,7 @@ const all = async (status) => {
           userCount = [];
         if (global.salons[value.id] != undefined) {
           branchCount = await global.salons[value.id].Branch.find(status);
-          userCount = await global.salons[value.id].SalonUser.find(
-            status
-          );
+          userCount = await global.salons[value.id].SalonUser.find(status);
         }
         if (value.subscription.subscriptionId != undefined) {
           const subscription = await Subscription.findById(
@@ -47,21 +49,27 @@ const all = async (status) => {
 
 const getSalonById = async (salonId, branchId, status) => {
   try {
-    const salon = await Salon.findById(salonId)
-    const theme = await Theme.findById(salon.themeId)
-    let category
+    const salon = await Salon.findById(salonId);
+    const theme = await Theme.findById(salon.themeId);
+    let category;
     if (global.salons[salonId] != undefined || salonId) {
-      category = await global.salons[salonId].SalonCategory.find(status)
+      category = await global.salons[salonId].SalonCategory.find(status);
+    } else if (branchId != undefined) {
+      category = await global.salons[salonId].BranchCategory.find(status);
     }
-    else if (branchId != undefined) {
-      category = await global.salons[salonId].BranchCategory.find(status)
-    }
-    return ({ status: httpStatus.OK, data: { ...salon._doc, primaryColor: theme.primaryColor, secondaryColor: theme.secondaryColor } })
+    return {
+      status: httpStatus.OK,
+      data: {
+        ...salon._doc,
+        primaryColor: theme.primaryColor,
+        secondaryColor: theme.secondaryColor,
+      },
+    };
   } catch (error) {
     console.log(error);
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
   }
-}
+};
 
 const create = async (data, files) => {
   try {
@@ -114,10 +122,7 @@ const update = async (data, files) => {
       });
     }
 
-    const salon = await Salon.findByIdAndUpdate(
-      data._id || data.id,
-      data
-    );
+    const salon = await Salon.findByIdAndUpdate(data._id || data.id, data);
     return {
       status: httpStatus.OK,
       message: "Salon Updated Successfully",
