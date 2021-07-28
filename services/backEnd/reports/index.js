@@ -1,0 +1,6 @@
+module.exports.dailyReportService = require('./dailyReportService')
+module.exports.cashBookReportService = require('./cashBookReportService')
+module.exports.expenseReportService = require('./expenseReportService')
+module.exports.serviceReportService = require('./serviceReportService')
+module.exports.orderReportService = require('./orderReportService')
+module.exports.salesReportService = require('./salesReportService')

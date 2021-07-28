@@ -6,5 +6,6 @@ router.get('/getCart', cartController.getCart)
 router.post('/addToCart', cartController.addToCart)
 router.post('/removeToCart', cartController.removeToCart)
 router.post('/transferCart', cartController.transferCart)
+router.post('/applyCoupon', cartController.applyCoupon)
 
 module.exports = router;

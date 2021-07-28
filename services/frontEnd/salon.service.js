@@ -33,7 +33,17 @@ const getSalonById = async (salonId, branchId, status) => {
     else if (branchId != undefined) {
       category = await global.salons[salonId].BranchCategory.find(status)
     }
-    return ({ status: httpStatus.OK, data: { ...salon._doc, lighterColor: colorLuminance(theme.primaryColor, 50), primaryColor: theme.primaryColor, secondaryColor: colorLuminance(theme.primaryColor, -10), currencySymbol: currency.currencySymbol, workingHours: hours } })
+    let lighterColor = colorLuminance(theme.primaryColor, 50);
+    if (lighterColor == '#ffffff') {
+      lighterColor = colorLuminance(theme.primaryColor, 45);
+
+    }
+    let secondaryLight = colorLuminance(theme.secondaryColor, 40);
+
+    if (secondaryLight == '#ffffff') {
+      secondaryLight = colorLuminance(theme.secondaryColor, 35);
+    }
+    return ({ status: httpStatus.OK, data: { ...salon._doc, primaryLight: lighterColor, primaryColor: theme.primaryColor, primaryDark: colorLuminance(theme.primaryColor, -10), secondaryColor: theme.secondaryColor, secondaryLight: secondaryLight, currencySymbol: currency.currencySymbol, workingHours: hours } })
   } catch (error) {
     console.log(error);
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };

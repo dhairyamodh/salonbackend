@@ -39,10 +39,10 @@ const all = async (salonId, branchId, status) => {
     }
     const userdata = await Promise.all(
       usergroups.map(async (item) => {
-        let serviceLabel = "";
+        let serviceLabel = [];
         if (item.services) {
           item.services.map((service, index) => {
-            serviceLabel = [...serviceLabel, service.label];
+            serviceLabel.push(service.label);
           });
         }
         return { ...item, servicesWithComma: serviceLabel.join(", ") };
@@ -57,7 +57,7 @@ const all = async (salonId, branchId, status) => {
 
 const create = async (data) => {
   try {
-    console.log(data.services);
+
     if (data.services === []) {
       return {
         status: httpStatus.INTERNAL_SERVER_ERROR,

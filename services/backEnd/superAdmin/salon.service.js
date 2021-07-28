@@ -9,6 +9,7 @@ const { salonValidation } = require("../../../validations/backEnd/superAdmin");
 const moment = require("moment");
 
 var MongoClient = require("mongodb").MongoClient;
+const { User } = require("../../../models");
 
 const all = async (status) => {
   try {
@@ -108,6 +109,7 @@ const create = async (data, files) => {
 
 const update = async (data, files) => {
   try {
+    console.log(data, files);
     const { error } = salonValidation.create(data);
     if (error) {
       console.log(error);
@@ -146,7 +148,10 @@ const remove = async (data) => {
       if (deleting) {
         delete global.salons[data];
         await Salon.findByIdAndDelete(data);
-        await User.deleteMany({ restaurantId: data });
+        const users = await User.find({ salonId: data })
+        if (users.length > 0) {
+          await User.deleteMany({ salonId: data });
+        }
         return {
           status: httpStatus.OK,
           message: "Salon Deleted Successfully",

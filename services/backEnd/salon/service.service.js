@@ -37,6 +37,9 @@ const create = async (db, data, files) => {
         } else {
             data.imageSrc = "uploaded/restaurants/service/res_logo.png";
         }
+        if (data.price < data.salePrice) {
+            return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
+        }
         const discount = 100 * (data.price - data.salePrice) / data.price;
         data.discount = discount.toFixed(0)
         if (isSalonAdmin(data.role) ? await db.SalonService.findOne({ name: data.name }) : await db.BranchService.findOne({ name: data.name })) {
@@ -62,6 +65,9 @@ const update = async (db, data, files) => {
             files.map(file => {
                 data.imageSrc = file.destination + '/' + file.filename
             })
+        }
+        if (data.price < data.salePrice) {
+            return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
         }
         const discount = 100 * (data.price - data.salePrice) / data.price;
         data.discount = discount.toFixed(0)

@@ -10,7 +10,7 @@ const getBranchCode = (salonName, lastBranchCode) => {
 const getBranchBySalonId = async (data, status) => {
   try {
     let branch = [];
-    if (data == "all") {
+    if (data === "all") {
       await Promise.all(
         Object.values(global.salons).map(async (key) => {
           const currentBranch = await key.Branch.aggregate([
@@ -166,10 +166,10 @@ const remove = async (data) => {
   try {
     await global.salons[data.salonId].Branch.findByIdAndDelete(data._id);
     const newdata = { salonId: data.salonId, branchId: data._id };
-    await global.salons[data.salonId].BranchItemCategory.deleteMany(newdata);
-    await global.salons[data.salonId].BranchItem.deleteMany(newdata);
-    await global.salons[data.salonId].Order.deleteMany(newdata);
-    await global.salons[data.salonId].RestaurantUser.deleteMany(newdata);
+    // await global.salons[data.salonId].BranchItemCategory.deleteMany(newdata);
+    // await global.salons[data.salonId].BranchItem.deleteMany(newdata);
+    // await global.salons[data.salonId].Order.deleteMany(newdata);
+    // await global.salons[data.salonId].RestaurantUser.deleteMany(newdata);
     return { status: httpStatus.OK, message: "Branch Deleted Successfully" };
   } catch (error) {
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };

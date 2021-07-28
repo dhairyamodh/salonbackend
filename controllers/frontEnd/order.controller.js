@@ -8,11 +8,16 @@ const getAvailableTime = catchAsync(async (req, res) => {
 });
 
 const create = catchAsync(async (req, res) => {
-    const response = await orderService.create(req.body);
+    const response = await orderService.create(global.salons[req.body.salonId], req.body);
+    res.status(response.status).send(response);
+});
+
+const getOrderById = catchAsync(async (req, res) => {
+    const response = await orderService.getOrderById(global.salons[req.query.salonId], req.query.data);
     res.status(response.status).send(response);
 });
 
 
 module.exports = {
-    create, getAvailableTime
+    create, getAvailableTime, getOrderById
 };

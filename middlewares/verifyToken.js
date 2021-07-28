@@ -12,9 +12,9 @@ async function auth(req, res, next) {
         }
         const userId = verified._id;
         const users = await User.findById(userId);
-
         if (!users) {
-            return res.status(404).send({ message: "user not found" });
+            console.log('sdjhsjdhjshdjh sjdh jashjkdhjshdj');
+            // return res.status(404).send({ message: "user not found" });
         }
         req.userId = verified._id;
         const checkrole = users.role != 'customer'
@@ -28,7 +28,8 @@ async function auth(req, res, next) {
             } else {
                 return res.status(401).send({ message: "Your subscription is expired" });
             }
-            req.salondb = users.salonId
+            req.salondb = await users.salonId
+
         }
         next();
     } catch (error) {

@@ -3,4 +3,7 @@
 const DATEFORMAT = 'DD/MM/YYYY';
 const DATETIMEFORMAT = 'DD/MM/YYYY HH:mm';
 
-module.exports = { DATEFORMAT, DATETIMEFORMAT, }
+const getToFix = (value, decimal) => {
+    return value ? value.toFixed(decimal || 2) : 0
+}
+module.exports = { DATEFORMAT, DATETIMEFORMAT, getToFix }

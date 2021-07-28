@@ -38,6 +38,7 @@ const register = async (data) => {
 const login = async (data) => {
     try {
         const user = await User.findOne({ email: data.email });
+
         if (!user) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "User does not exist" });
         }
@@ -59,7 +60,10 @@ const login = async (data) => {
 
 const details = async (data) => {
     try {
+        console.log(data);
         const user = await User.findById(data);
+
+        // const bookings = await global.salons[user.salonId].Order.find().sort({ _id: -1 });
         return ({ status: httpStatus.OK, user: user, message: "User details found successfully" });
 
     } catch (error) {
@@ -109,6 +113,33 @@ const changeForgotPassword = async (data) => {
 
 }
 
+const updateDetails = async (data) => {
+    try {
+        await User.findByIdAndUpdate(data.id, { ...data });
+        const user = await User.findById(data.id)
+        return ({ status: httpStatus.OK, user: user, message: "Profile updated successfully" });
+
+    } catch (error) {
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Failed to update profile" });
+
+    }
+}
+
+
+const getBookings = async (userId, data) => {
+    try {
+        console.log(userId, data);
+        const booking = await global.salons[data.salonId].Order.find({ userId: userId });
+        return ({ status: httpStatus.OK, data: booking, message: "Profile updated successfully" });
+
+    } catch (error) {
+        console.log(error);
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Failed to update profile" });
+
+    }
+}
+
+
 module.exports = {
-    register, login, details, forgotpassword, changeForgotPassword
+    register, login, details, forgotpassword, changeForgotPassword, updateDetails, getBookings
 }

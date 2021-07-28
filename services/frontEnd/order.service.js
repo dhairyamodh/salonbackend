@@ -24,30 +24,34 @@ const getAvailableTime = async (salonId, branchId, date) => {
     }
 }
 
-const create = async (data) => {
+const create = async (db, data) => {
     try {
+        const time = moment(data.selectedTime, ["h:mm A"]).format("HH:mm");
+        const lastOrder = await db.Order.find({
+            branchId: data.branchId != undefined ? data.branchId : undefined,
+        })
+            .sort({ _id: -1 })
+            .limit(1);
 
-        const lastOrder = await global.salons[data.salonId].Order.find({ branchId: data.branchId }).sort({ _id: -1 }).limit(1)
-        if (lastOrder.length > 0 && data.orderNumber == lastOrder[0].orderNumber) {
+        const orderNumber = lastOrder.length > 0 ? ++lastOrder[0].orderNumber : 1;
+        const order = await db.Order.create({ ...data, userName: data.name, userEmail: data.email, userMobile: data.mobile, orderItems: data.cartItems, startDate: data.selectedDate, startTime: time, orderNumber: orderNumber })
 
-            data.orderNumber = lastOrder[0].orderNumber++;
-            data.branchOrderNumber = data.branchCode + (data.orderNumber++)
-        } else {
-            data.branchOrderNumber = data.branchCode + data.orderNumber
-        }
-        const order = await global.salons[data.salonId].Order.create(data)
         if (order) {
-            if (data.customerMobile) {
-                const currentCustomer = await global.salons[data.salonId].Customer.findOne({ customerMobile: data.customerMobile })
-                if (!currentCustomer) {
-                    await global.salons[data.salonId].Customer.create({ ...data, totalOrders: 1, totalPrice: data.grandTotal })
-                } else {
-                    await global.salons[data.salonId].Customer.findByIdAndUpdate(currentCustomer._id, { ...data, $inc: { totalOrders: 1, totalPrice: data.grandTotal } })
-                }
-            }
-            await Salon.findByIdAndUpdate(data.salonId, { $inc: { balance: order.grandTotal } })
+            await db.Cart.findOneAndUpdate({ customerId: data.userId }, { $set: { items: [] } })
         }
-        return ({ status: httpStatus.OK, message: 'Order Added Successfully', data: { ...order._doc, createdAt: moment(order.createdAt).format(DATETIMEFORMAT), taxTotal: order.cgstCharges + order.sgstCharges } })
+        return ({ status: httpStatus.OK, data: order })
+
+    } catch (error) {
+        console.log(error);
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const getOrderById = async (db, data) => {
+    try {
+        const order = await db.Order.findById(data)
+        return ({ status: httpStatus.OK, data: order })
+
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -55,5 +59,5 @@ const create = async (data) => {
 }
 
 module.exports = {
-    create, getAvailableTime
+    create, getAvailableTime, getOrderById
 }

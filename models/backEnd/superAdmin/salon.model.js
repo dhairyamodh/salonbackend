@@ -57,7 +57,7 @@ const salonSchema = mongoose.Schema(
         },
         role: {
             type: String,
-            default: 'resturant',
+            default: 'salon',
         },
         lastBranchCode: {
             type: Number,

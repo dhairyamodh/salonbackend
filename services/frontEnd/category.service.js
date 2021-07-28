@@ -4,7 +4,52 @@ const { Category } = require('../../models/backEnd/superAdmin');
 
 const all = async (salonId, branchId, status) => {
     try {
-        const category = (branchId != undefined) ? await global.salons[salonId].BranchCategory.find({ branchId: branchId, ...status }) : (salonId != undefined) ? await global.salons[salonId].SalonCategory.find(status) : await Category.find(status)
+        let category = []
+        const data = {
+            ...(branchId != undefined && { branchId: ObjectId(branchId) }),
+            ...status
+        };
+        if (branchId != undefined) {
+            category = await global.salons[salonId].BranchCategory.aggregate([
+                { $match: data },
+                {
+                    $lookup: {
+                        from: "BranchService",
+                        localField: "_id",
+                        foreignField: "branchId",
+                        as: "services",
+                    },
+                },
+                {
+                    $project: {
+                        categoryName: "$categoryName",
+                        categoryImage: "$categoryImage",
+                        totalServices: { $size: "$services" },
+                    },
+                },
+            ])
+        } else if (salonId != undefined) {
+            category = await global.salons[salonId].SalonCategory.aggregate([
+                { $match: data },
+                {
+                    $lookup: {
+                        from: "salonservices",
+                        localField: "_id",
+                        foreignField: "categoryId",
+                        as: "services",
+                    },
+                },
+                {
+                    $project: {
+                        categoryName: "$categoryName",
+                        categoryImage: "$categoryImage",
+                        totalServices: { $size: "$services" },
+                    },
+                },
+            ])
+        } else {
+            category = await Category.find(status)
+        }
 
         return ({ status: httpStatus.OK, data: category })
     } catch (error) {

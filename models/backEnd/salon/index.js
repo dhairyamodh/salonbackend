@@ -8,6 +8,9 @@ const { orderSchema } = require('./order.model');
 const { customerSchema } = require('./customer.model');
 const { cartSchema } = require('./Cart.model');
 const { salonUserGroupSchema } = require('./salonusergroup.model');
+const { expenseSchema } = require('./expense.model');
+const { offersSchema } = require('./offers.model');
+const { dealsSchema } = require('./deals.model');
 
 module.exports = {
     Branch: branchSchema,
@@ -19,5 +22,8 @@ module.exports = {
     Order: orderSchema,
     Customer: customerSchema,
     Cart: cartSchema,
-    SalonUserGroup: salonUserGroupSchema
+    SalonUserGroup: salonUserGroupSchema,
+    Expense: expenseSchema,
+    Offers: offersSchema,
+    Deals: dealsSchema,
 }

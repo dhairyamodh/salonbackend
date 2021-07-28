@@ -26,6 +26,16 @@ const changeForgotPassword = catchAsync(async (req, res) => {
     return res.status(result.status).send(result)
 })
 
+const updateDetails = catchAsync(async (req, res) => {
+    const result = await authService.updateDetails(req.body);
+    return res.status(result.status).send(result)
+})
+
+const getBookings = catchAsync(async (req, res) => {
+    const result = await authService.getBookings(req.userId, req.query);
+    return res.status(result.status).send(result)
+})
+
 module.exports = {
-    register, login, details, forgotpassword, changeForgotPassword
+    register, login, details, forgotpassword, changeForgotPassword, updateDetails, getBookings
 };

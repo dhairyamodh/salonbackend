@@ -14,16 +14,16 @@ const isSalonAdminRole = (role) => {
 
 const all = async (salonId, branchId, status) => {
   try {
+    console.log(salonId);
     // const data = { ...(branchId != 'all' && { branchId: ObjectId(branchId) }) }
     const category =
       branchId != undefined
         ? await global.salons[salonId].BranchCategory.find({
-            branchId: branchId,
-            ...status,
-          })
-        : salonId != undefined
-        ? await global.salons[salonId].SalonCategory.find(status)
-        : await Category.find(status);
+          branchId: branchId,
+          ...status,
+        })
+        : await global.salons[salonId].SalonCategory.find(status)
+
 
     return { status: httpStatus.OK, data: category };
   } catch (error) {
@@ -45,15 +45,13 @@ const create = async (data, files) => {
         message: error.details[0].message,
       };
     }
-    const checkCategory = isSuperadminRole(data.role)
-      ? await Category.find({ categoryName: data.categoryName })
-      : isSalonAdminRole(data.role)
+    const checkCategory = isSalonAdminRole(data.role)
       ? await global.salons[data.salonId].SalonCategory.find({
-          categoryName: data.categoryName,
-        })
+        categoryName: data.categoryName,
+      })
       : await global.salons[data.salonId].BranchCategory.find({
-          categoryName: data.categoryName,
-        });
+        categoryName: data.categoryName,
+      });
     if (checkCategory.length > 0) {
       return {
         status: httpStatus.INTERNAL_SERVER_ERROR,
@@ -67,13 +65,13 @@ const create = async (data, files) => {
     } else {
       data.categoryImage = "uploaded/salons/category/res_logo.png";
     }
-    isSuperadminRole(data.role)
-      ? await Category.create(data)
-      : isSalonAdminRole(data.role)
+
+    isSalonAdminRole(data.role)
       ? await global.salons[data.salonId].SalonCategory.create(data)
       : await global.salons[data.salonId].BranchCategory.create(data);
     return { status: httpStatus.OK, message: "Category Added Successfully" };
   } catch (error) {
+    console.log(error);
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
   }
 };
@@ -93,10 +91,10 @@ const update = async (data, files) => {
     const checkCategory = isSuperadminRole(data.role)
       ? await Category.find({ categoryName: data.categoryName })
       : isSalonAdminRole(data.role)
-      ? await global.salons[data.salonId].SalonCategory.find({
+        ? await global.salons[data.salonId].SalonCategory.find({
           categoryName: data.categoryName,
         })
-      : await global.salons[data.salonId].BranchCategory.find({
+        : await global.salons[data.salonId].BranchCategory.find({
           categoryName: data.categoryName,
         });
     if (checkCategory.length > 0) {
@@ -119,11 +117,11 @@ const update = async (data, files) => {
     isSuperadminRole(data.role)
       ? await Category.findByIdAndUpdate(data.id, data)
       : isSalonAdminRole(data.role)
-      ? await global.salons[data.salonId].SalonCategory.findByIdAndUpdate(
+        ? await global.salons[data.salonId].SalonCategory.findByIdAndUpdate(
           data.id,
           data
         )
-      : await global.salons[data.salonId].BranchCategory.findByIdAndUpdate(
+        : await global.salons[data.salonId].BranchCategory.findByIdAndUpdate(
           data.id,
           data
         );
@@ -136,9 +134,7 @@ const update = async (data, files) => {
 
 const remove = async (data) => {
   try {
-    if (isSuperadminRole(data.role)) {
-      await Category.findByIdAndDelete(data.id);
-    } else if (isSalonAdminRole(data.role)) {
+    if (isSalonAdminRole(data.role)) {
       await global.salons[data.salonId].SalonCategory.findByIdAndDelete(
         data.id
       );
@@ -148,17 +144,16 @@ const remove = async (data) => {
       );
     }
 
-    if (!isSuperadminRole(data.role)) {
-      !isSalonAdminRole(data.role)
-        ? await global.salons[data.salonId].BranchService.updateMany(
-            { categoryId: data.id },
-            { $set: { categoryId: undefined } }
-          )
-        : await global.salons[data.salonId].SalonService.updateMany(
-            { categoryId: data.id },
-            { $set: { categoryId: undefined } }
-          );
-    }
+    !isSalonAdminRole(data.role)
+      ? await global.salons[data.salonId].BranchService.updateMany(
+        { categoryId: data.id },
+        { $set: { categoryId: undefined } }
+      )
+      : await global.salons[data.salonId].SalonService.updateMany(
+        { categoryId: data.id },
+        { $set: { categoryId: undefined } }
+      );
+
     return { status: httpStatus.OK, message: "Category Deleted Successfully" };
   } catch (error) {
     console.log(error);

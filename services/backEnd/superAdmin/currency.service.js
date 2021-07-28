@@ -21,7 +21,7 @@ const all = async (data, status) => {
 const create = async (data) => {
   try {
     await Currency.create(data);
-    return { status: httpStatus.OK, message: "Table type Added Successfully" };
+    return { status: httpStatus.OK, message: "Currency Added Successfully" };
   } catch (error) {
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
   }
@@ -32,7 +32,7 @@ const update = async (data) => {
     await Currency.findByIdAndUpdate(data._id || data.id, data);
     return {
       status: httpStatus.OK,
-      message: "Table type Updated Successfully",
+      message: "Currency Updated Successfully",
     };
   } catch (error) {
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
@@ -44,7 +44,7 @@ const remove = async (data) => {
     await Currency.findByIdAndDelete(data);
     return {
       status: httpStatus.OK,
-      message: "Table type Deleted Successfully",
+      message: "Currency Deleted Successfully",
     };
   } catch (error) {
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };

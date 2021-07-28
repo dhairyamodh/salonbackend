@@ -1,9 +1,9 @@
 const catchAsync = require('../../../utils/catchAsync');
-const { orderService } = require('../../backEnd/salon');
+const { orderService } = require('../../../services/backEnd/salon');
 const { statusCheck } = require('../../../commonFunction/objectList')
 
 const all = catchAsync(async (req, res) => {
-    const response = await orderService.all(req.resdb, req.branchId, req.query.start, req.query.end);
+    const response = await orderService.all(req.query.salonId, req.branchId, req.query.start, req.query.end);
     res.status(response.status).send(response);
 });
 

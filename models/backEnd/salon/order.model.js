@@ -20,67 +20,64 @@ const orderSchema = mongoose.Schema(
         },
         branchOrderNumber: {
             type: String,
-            required: true,
-        },
-        orderBy: {
-            type: String,
-            require: false
-        },
-        tableNumber: {
-            type: String,
-            require: false
+            required: false,
         },
         orderItems: {
             type: Array,
-            require: true,
+            required: true,
         },
         itemsTotal: {
             type: Number,
-            require: true,
+            required: true,
         },
-        cgstCharges: {
+        taxCharges: {
             type: Number,
-            require: true,
-        },
-        sgstCharges: {
-            type: Number,
-            require: true,
+            required: true,
         },
         otherCharges: {
             type: Number,
-            require: true,
+            required: false,
         },
         discount: {
             type: Number,
-            require: true,
+            required: false,
         },
         grandTotal: {
             type: Number,
-            require: true,
-        },
-        paymentType: {
-            type: String,
-            require: true,
-        },
-        paymentTypeId: {
-            type: String,
-            require: true,
+            required: true,
         },
         isPaid: {
             type: String,
             default: true,
         },
-        customerMobile: {
+        userId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'users',
+            required: false,
+        },
+        userName: {
             type: String,
-            require: false
+            required: false,
+        },
+        userEmail: {
+            type: String,
+            required: false,
+        },
+        userMobile: {
+            type: String,
+            required: false,
         },
         startDate: {
             type: Date,
-            require: false
+            required: false
+        },
+        startTime: {
+            type: String,
+            required: false
         },
         endDate: {
             type: Date,
-            require: false
+            required: false
         }
 
     },

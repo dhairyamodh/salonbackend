@@ -29,7 +29,6 @@ const login = async (data) => {
     const user = await User.findOne({ mobile: data.mobile });
 
     if (user.salonId) {
-      console.log(global.salons);
 
       let salonUser = await global.salons[user.salonId].SalonUser.findOne({
         status: true,
@@ -76,9 +75,9 @@ const login = async (data) => {
 
 const details = async (data) => {
   let user = await User.findOne({ _id: data });
-  if (!user) {
-    return { status: httpStatus.NOT_FOUND, message: "user does not exist" };
-  }
+  // if (!user) {
+  //   return { status: httpStatus.NOT_FOUND, message: "user does not exist" };
+  // }
   const newuser = await getUserBranchCode(user);
   return {
     status: httpStatus.OK,

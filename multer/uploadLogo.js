@@ -4,7 +4,7 @@ const fs = require('fs');
 
 var storage = multer.diskStorage({
     destination: function async(req, file, cb) {
-        const dir = `./uploaded/restaurants/logo`
+        const dir = `./uploaded/salons/logo`
         const pathExist = fs.existsSync(dir);
         if (!pathExist) {
             return fs.mkdirSync(dir, { recursive: true })

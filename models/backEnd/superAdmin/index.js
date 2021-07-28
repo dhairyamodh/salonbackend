@@ -2,5 +2,4 @@ module.exports.Salon = require("./salon.model");
 module.exports.Theme = require("./theme.model");
 module.exports.Subscription = require("./subscription.model");
 module.exports.Category = require("./category.model");
-module.exports.ExpenseType = require("./expensetype.model");
 module.exports.Currency = require("./currency.model");

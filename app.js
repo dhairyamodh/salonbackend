@@ -57,7 +57,7 @@ app.use('/api', routes);
 app.use('/api/superadmin', superAdminRoutes);
 
 app.use('/api/salon', salonRoutes)
-app.use('/api/', websiteRoutes)
+app.use('/api', websiteRoutes)
 
 // app.use((req, res, next) => {
 //   console.log(global.restaurants);

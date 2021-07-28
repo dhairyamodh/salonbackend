@@ -25,7 +25,7 @@ const addToCart = async (db, data) => {
             cart = await db.Cart.create({ ...data, customerId: data.userId })
         }
 
-        return ({ status: httpStatus.OK, data: cart })
+        return ({ status: httpStatus.OK, data: cart, message: `${data.items[0].name} added to cart` })
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -51,7 +51,7 @@ const transferCart = async (db, data) => {
         const cart = await db.Cart.findOne({ customerId: data.userId })
         let newcart = []
         data.items.map((dataItem) => {
-            const found = cart.items.findIndex((cartItem) => {
+            const found = cart && cart.items.findIndex((cartItem) => {
                 return dataItem._id === cartItem._id
             })
             // console.log(found);
@@ -62,7 +62,7 @@ const transferCart = async (db, data) => {
             newcart = [...newcart, dataItem]
         })
         // console.log('newcart', newcart.map((item) => item.quantity));
-        const filteresItems = cart.items.filter((cartItem) => {
+        const filteresItems = cart && cart.items.filter((cartItem) => {
             if (data.items.find((dataItems) => dataItems._id === cartItem._id)) {
                 return false
             }
@@ -70,7 +70,21 @@ const transferCart = async (db, data) => {
         })
         const updatedCart = [...newcart, ...filteresItems]
         await db.Cart.findOneAndUpdate({ customerId: data.userId }, { ...data, items: updatedCart })
-        return ({ status: httpStatus.OK, data: updatedCart })
+        return ({ status: httpStatus.OK, data: updatedCart, })
+    } catch (error) {
+        console.log(error);
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const applyCoupon = async (db, data) => {
+    try {
+        const checkCouponCode = await db.Deals.findOne({ dealCode: data.coupon })
+        if (checkCouponCode) {
+            return ({ status: httpStatus.OK, data: checkCouponCode })
+        }
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Invalid Code" })
+
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -78,5 +92,5 @@ const transferCart = async (db, data) => {
 }
 
 module.exports = {
-    getCart, addToCart, removeToCart, transferCart
+    getCart, addToCart, removeToCart, transferCart, applyCoupon
 }
