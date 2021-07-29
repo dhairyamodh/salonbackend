@@ -8,7 +8,6 @@ const all = async (salonId, branchId, start, end) => {
   try {
     const startDate = start.split("T")[0];
     const endDate = end.split("T")[0];
-    console.log(start, end, "sdd", startDate, endDate);
     const data = branchId != "all" && { branchId: ObjectId(branchId) };
     const orders = await global.salons[salonId].Order.find({
       createdAt: {
@@ -17,7 +16,6 @@ const all = async (salonId, branchId, start, end) => {
       },
       // ...data,
     });
-    console.log(orders);
     return { status: httpStatus.OK, data: orders };
   } catch (error) {
     console.log(error);

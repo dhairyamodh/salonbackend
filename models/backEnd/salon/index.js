@@ -11,6 +11,7 @@ const { salonUserGroupSchema } = require('./salonusergroup.model');
 const { expenseSchema } = require('./expense.model');
 const { offersSchema } = require('./offers.model');
 const { dealsSchema } = require('./deals.model');
+const { chairSchema } = require('./chair.model');
 
 module.exports = {
     Branch: branchSchema,
@@ -26,4 +27,5 @@ module.exports = {
     Expense: expenseSchema,
     Offers: offersSchema,
     Deals: dealsSchema,
+    Chair: chairSchema
 }

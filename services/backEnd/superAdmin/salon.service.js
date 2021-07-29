@@ -109,7 +109,6 @@ const create = async (data, files) => {
 
 const update = async (data, files) => {
   try {
-    console.log(data, files);
     const { error } = salonValidation.create(data);
     if (error) {
       console.log(error);
@@ -124,7 +123,7 @@ const update = async (data, files) => {
       });
     }
 
-    const salon = await Salon.findByIdAndUpdate(data._id || data.id, data);
+    await Salon.findByIdAndUpdate(data._id || data.id, data);
     return {
       status: httpStatus.OK,
       message: "Salon Updated Successfully",

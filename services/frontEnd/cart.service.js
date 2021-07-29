@@ -4,7 +4,7 @@ const httpStatus = require('http-status');
 const getCart = async (db, data) => {
     try {
         const cart = await db.Cart.findOne({ customerId: data.userId })
-        return ({ status: httpStatus.OK, data: cart.items })
+        return ({ status: httpStatus.OK, data: cart && cart.items })
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })

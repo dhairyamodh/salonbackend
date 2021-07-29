@@ -22,8 +22,7 @@ const getUserBranchCode = async (user) => {
     } else if (user.salonId) {
         const salon = await Salon.findById(user.salonId)
         const theme = await Theme.findById(salon.themeId);
-        user._doc.cgst = salon.cgst
-        user._doc.sgst = salon.sgst
+        user._doc.taxPercentage = salon.taxPercentage
         user._doc.salonName = salon.name
         user._doc.salonLogo = salon.logo
         user._doc.primaryColor = theme.primaryColor
@@ -33,6 +32,11 @@ const getUserBranchCode = async (user) => {
         user._doc.gstNumber = salon.gstNumber
         user._doc.contactPerson = salon.contactPerson
         user._doc.address = salon.address
+        const order = await global.salons[user.salonId].Order.find().sort({ _id: -1 }).limit(1)
+        if (order.length > 0) {
+            user._doc.orderNumber = order[0].orderNumber
+            user._doc.lastOrderTotal = order[0].grandTotal
+        }
     }
     return user;
 }

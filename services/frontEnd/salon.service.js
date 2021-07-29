@@ -3,9 +3,10 @@ const { colorLuminance } = require("../../commonFunction/functionList");
 const { Salon, Theme, Currency } = require('../../models/backEnd/superAdmin')
 const moment = require('moment')
 
-const getSalonById = async (salonId, branchId, status) => {
+const getSalonById = async (domainName, branchId, status) => {
   try {
-    const salon = await Salon.findById(salonId)
+    const salon = await Salon.findOne({ domainName: domainName })
+    const salonId = salon._id;
     const theme = await Theme.findById(salon.themeId)
     const currency = await Currency.findById(salon.currencyId)
 

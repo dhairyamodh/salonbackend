@@ -94,7 +94,6 @@ const searchService = async (db, branchId, data) => {
     try {
 
         const services = branchId ? await db.BranchService.find({ name: { $regex: '.*' + data + '.*', $options: 'i' } }) : await db.SalonService.find({ name: { $regex: data, $options: 'i' } })
-        console.log(services);
         return ({ status: httpStatus.OK, data: services })
 
     } catch (error) {

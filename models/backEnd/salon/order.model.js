@@ -34,6 +34,18 @@ const orderSchema = mongoose.Schema(
             type: Number,
             required: true,
         },
+        taxPercentage: {
+            type: Number,
+            required: false,
+        },
+        paymentType: {
+            type: String,
+            required: false,
+        },
+        paymentTypeId: {
+            type: String,
+            required: false,
+        },
         otherCharges: {
             type: Number,
             required: false,

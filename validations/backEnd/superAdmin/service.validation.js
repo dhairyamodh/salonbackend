@@ -8,7 +8,7 @@ const create = (data) => {
         // categoryId: Joi.custom(objectId),
         estimatedTime: Joi.string().required().label('Estimated Time'),
         name: Joi.string().required().label('Service Name'),
-        price: Joi.number().integer().label('Service Price'),
+        price: Joi.number().label('Service Price'),
         status: Joi.string().required(),
     }).unknown();
     return schema.validate(data);
@@ -20,7 +20,7 @@ const update = (data) => {
         // categoryId: Joi.custom(objectId),
         estimatedTime: Joi.string().required().label('Estimated Time'),
         name: Joi.string().required().label('Service Name'),
-        price: Joi.number().integer().label('Service Price'),
+        price: Joi.number().label('Service Price'),
         status: Joi.string().required(),
     }).unknown();
     return schema.validate(data);

@@ -37,15 +37,17 @@ const create = async (db, data, files) => {
         } else {
             data.imageSrc = "uploaded/restaurants/service/res_logo.png";
         }
-        if (data.price < data.salePrice) {
+        const salePrice = parseFloat(data.salePrice)
+        const price = parseFloat(data.price)
+        if (price < salePrice) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
         }
-        const discount = 100 * (data.price - data.salePrice) / data.price;
+        const discount = 100 * (price - salePrice) / price;
         data.discount = discount.toFixed(0)
         if (isSalonAdmin(data.role) ? await db.SalonService.findOne({ name: data.name }) : await db.BranchService.findOne({ name: data.name })) {
             return ({ status: httpStatus.NOT_FOUND, message: "Service name must be different!" })
         }
-        isSalonAdmin(data.role) ? await db.SalonService.create({ ...data, price: parseInt(data.price) }) : await db.BranchService.create({ ...data, price: parseInt(data.price) })
+        isSalonAdmin(data.role) ? await db.SalonService.create(data) : await db.BranchService.create(data)
 
         return ({ status: httpStatus.OK, message: 'Service Added Successfully' })
     } catch (error) {
@@ -56,7 +58,6 @@ const create = async (db, data, files) => {
 
 const update = async (db, data, files) => {
     try {
-        console.log(files);
         const { error } = serviceValidation.update(data)
         if (error) {
             return ({ status: httpStatus.NOT_FOUND, message: error.details[0].message })
@@ -66,19 +67,20 @@ const update = async (db, data, files) => {
                 data.imageSrc = file.destination + '/' + file.filename
             })
         }
-        if (data.price < data.salePrice) {
+        const salePrice = parseFloat(data.salePrice)
+        const price = parseFloat(data.price)
+        if (price < salePrice) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
         }
-        const discount = 100 * (data.price - data.salePrice) / data.price;
+        const discount = 100 * (price - salePrice) / price;
         data.discount = discount.toFixed(0)
-        console.log(discount);
         if (isSalonAdmin(data.role)) {
-            await db.SalonService.findByIdAndUpdate(data.id, { ...data, categoryId: data.categoryId != 'null' ? data.categoryId : undefined, itemPrice: parseInt(data.itemPrice) })
+            await db.SalonService.findByIdAndUpdate(data.id, { ...data, categoryId: data.categoryId != 'null' ? data.categoryId : undefined })
         } else {
             if (data.categoryId) {
                 console.log('if')
                 await db.BranchService.update({ _id: data.id }, {
-                    ...data, price: parseInt(data.price)
+                    ...data
                 })
             }
             else {
@@ -88,7 +90,7 @@ const update = async (db, data, files) => {
                 delete data.categoryName
 
                 await db.BranchService.update({ _id: data.id }, {
-                    ...data, price: parseInt(data.price), $unset: { categoryId: 1, categoryName: 1 }
+                    ...data, $unset: { categoryId: 1, categoryName: 1 }
                 })
 
 

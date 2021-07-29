@@ -13,8 +13,7 @@ async function auth(req, res, next) {
         const userId = verified._id;
         const users = await User.findById(userId);
         if (!users) {
-            console.log('sdjhsjdhjshdjh sjdh jashjkdhjshdj');
-            // return res.status(404).send({ message: "user not found" });
+            return res.status(404).send({ message: "user not found" });
         }
         req.userId = verified._id;
         const checkrole = users.role != 'customer'

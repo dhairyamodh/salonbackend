@@ -14,16 +14,8 @@ const isSalonAdminRole = (role) => {
 
 const all = async (salonId, branchId, status) => {
   try {
-    console.log(salonId);
     // const data = { ...(branchId != 'all' && { branchId: ObjectId(branchId) }) }
-    const category =
-      branchId != undefined
-        ? await global.salons[salonId].BranchCategory.find({
-          branchId: branchId,
-          ...status,
-        })
-        : await global.salons[salonId].SalonCategory.find(status)
-
+    const category = await global.salons[salonId].SalonCategory.find(status)
 
     return { status: httpStatus.OK, data: category };
   } catch (error) {

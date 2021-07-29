@@ -47,7 +47,6 @@ const getReport = async (db, data) => {
                 //
             });
         })
-        console.log(items);
         return ({ status: httpStatus.OK, data: { table: items } })
     } catch (error) {
         console.log(error);

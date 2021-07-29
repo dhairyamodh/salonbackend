@@ -31,7 +31,7 @@ async function setrestaurantdb(salonId, next) {
         // if (next) {
         //     return await next()
         // }
-        console.log("global res", global.salons);
+        // console.log("global res", global.salons);
       });
       salon.on("disconnected", function () {
         console.log("Mongoose " + salonName + " connection disconnected");
@@ -82,7 +82,7 @@ function setallrestaurantdb() {
           salon.on("connected", async function () {
             importDbs();
             // console.log('Mongoose default connection open to  ' + salonName);
-            console.log("global res", global.salons);
+            // console.log("global res", global.salons);
           });
           salon.on("disconnected", function () {
             console.log(

@@ -7,7 +7,7 @@ const category = require('./category.route')
 const services = require('./service.route')
 const userGroup = require('./salonusergroup.route')
 // const hotkey = require('./hotkey.route')
-// const table = require('./table.route')
+const chair = require('./chair.route')
 const order = require('./order.route')
 const customer = require('./customer.route')
 const report = require('./report.route')
@@ -23,7 +23,7 @@ router.use('/category', category);
 router.use('/services', verify, services);
 router.use('/userGroup', verify, userGroup);
 // router.use('/hotkeys', verify, hotkey);
-// router.use('/tables', verify, table);
+router.use('/chairs', verify, chair);
 router.use('/orders', order);
 router.use('/customers', customer);
 router.use('/reports', verify, report);

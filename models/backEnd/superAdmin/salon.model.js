@@ -47,11 +47,7 @@ const salonSchema = mongoose.Schema(
             type: String,
             require: false,
         },
-        cgst: {
-            type: Number,
-            require: true,
-        },
-        sgst: {
+        taxPercentage: {
             type: Number,
             require: true,
         },
@@ -67,6 +63,10 @@ const salonSchema = mongoose.Schema(
             type: mongoose.SchemaTypes.ObjectId,
             ref: 'Currency',
             required: true,
+        },
+        domainName: {
+            type: String,
+            required: true
         },
         subscription: {
             subscriptionId: {
