@@ -1,17 +1,14 @@
 const httpStatus = require("http-status");
 const {
-  // restaurantDashboardService,
+  salonDashboardService,
   // branchDashboardService,
-  supeadminDashboardService,
 } = require("../dashboard");
 const userType = (db, data) => {
   switch (data.role) {
-    // case "salonadmin":
-    //   return restaurantDashboardService.getDashboard(db, data);
+    case "salonadmin":
+      return salonDashboardService.getDashboard(db, data);
     // case "branchadmin":
     //   return branchDashboardService.getDashboard(db, data);
-    case "superadmin":
-      return supeadminDashboardService.getDashboard(db, data);
     default:
       break;
   }

@@ -4,7 +4,7 @@ const httpStatus = require('http-status');
 const getCart = async (db, data) => {
     try {
         const cart = await db.Cart.findOne({ customerId: data.userId })
-        return ({ status: httpStatus.OK, data: cart && cart.items })
+        return ({ status: httpStatus.OK, data: cart ? cart.items : [] })
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -58,6 +58,7 @@ const transferCart = async (db, data) => {
             if (found > -1) {
                 dataItem.quantity += cart.items[found].quantity
             }
+            dataItem.itemTotal = dataItem.quantity * dataItem.salePrice
 
             newcart = [...newcart, dataItem]
         })

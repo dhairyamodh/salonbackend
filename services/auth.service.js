@@ -27,7 +27,6 @@ const generateOtp = () => {
 const login = async (data) => {
   try {
     const user = await User.findOne({ mobile: data.mobile });
-
     if (user.salonId) {
 
       let salonUser = await global.salons[user.salonId].SalonUser.findOne({

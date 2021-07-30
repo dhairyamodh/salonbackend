@@ -23,6 +23,31 @@ const all = async (salonId, branchId, start, end) => {
   }
 };
 
+const getFilterBookings = async (salonId, data) => {
+  try {
+    const startDate = data.date.start.split("T")[0];
+    const endDate = data.date.end.split("T")[0];
+    console.log(endDate, startDate);
+
+    const orderStatus = data.orderStatus != "all" ? data.orderStatus : undefined;
+    const paymentTypeId =
+      data.paymentTypeId != "all" ? data.paymentTypeId : undefined;
+    const orders = await global.salons[salonId].Order.find({
+      createdAt: {
+        $gte: new Date(startDate).setHours(0, 0, 0, 0),
+        $lte: new Date(endDate).setHours(23, 59, 59, 999),
+      },
+      ...(paymentTypeId && { paymentTypeId: paymentTypeId }),
+      ...(orderStatus && { isPaid: orderStatus }),
+      // ...data,
+    });
+    return { status: httpStatus.OK, data: orders };
+  } catch (error) {
+    console.log(error);
+    return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
+  }
+}
+
 const create = async (data) => {
   try {
     const lastOrder = await global.salons[data.salonId].Order.find({
@@ -76,8 +101,9 @@ const create = async (data) => {
 
 const update = async (data) => {
   try {
-    await global.salons[data.salonId].Order.findByIdAndUpdate(data.id, data);
-    return { status: httpStatus.OK, message: "Order Updated Successfully" };
+    await global.salons[data.salonId].Order.findByIdAndUpdate(data.id, { ...data, isPaid: "true" });
+    const updatedOrder = await global.salons[data.salonId].Order.findById(data.id)
+    return { status: httpStatus.OK, message: "Order Updated Successfully", data: updatedOrder };
   } catch (error) {
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
   }
@@ -97,4 +123,5 @@ module.exports = {
   all,
   update,
   remove,
+  getFilterBookings
 };

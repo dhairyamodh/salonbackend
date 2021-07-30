@@ -152,9 +152,9 @@ const update = async (data) => {
 
 const remove = async (data) => {
   try {
-    await global.salons[data.salonId].SalonUser.findByIdAndDelete(data._id);
+    await global.salons[data.salonId].SalonUser.findByIdAndDelete(data._id || data.id);
     await global.salons[data.salonId].SalonUser.findOneAndDelete({
-      salonUserId: data._id,
+      salonUserId: data._id || data.id,
     });
     await User.findOneAndDelete({ salonUserId: data._id });
     return { status: httpStatus.OK, message: "User Deleted Successfully" };

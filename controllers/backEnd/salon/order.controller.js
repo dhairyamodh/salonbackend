@@ -7,6 +7,11 @@ const all = catchAsync(async (req, res) => {
     res.status(response.status).send(response);
 });
 
+const getFilterBookings = catchAsync(async (req, res) => {
+    const response = await orderService.getFilterBookings(req.body.salonId, req.body);
+    res.status(response.status).send(response);
+});
+
 const create = catchAsync(async (req, res) => {
     const response = await orderService.create(req.body);
     res.status(response.status).send(response);
@@ -23,5 +28,5 @@ const remove = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    create, update, remove, all
+    create, update, remove, all, getFilterBookings
 };

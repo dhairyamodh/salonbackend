@@ -24,7 +24,7 @@ const register = async (data) => {
         if (createUser) {
             await global.salons[data.salonId].Customer.create({ ...data, password: hashPassword, })
             const token = jwt.sign({ _id: createUser._id }, process.env.JWT_SECRET);
-            return ({ status: httpStatus.OK, user: createUser, message: "User registered successfully", token: token });
+            return ({ status: httpStatus.OK, user: createUser, message: "Account created successfully", token: token });
         }
     } catch (error) {
         console.log(error);

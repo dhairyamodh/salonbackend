@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema(
     },
     mobile: {
       type: String,
-      require: true,
+      require: false,
       unique: true,
     },
     salonId: {
