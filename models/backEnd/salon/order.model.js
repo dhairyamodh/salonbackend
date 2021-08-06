@@ -90,6 +90,10 @@ const orderSchema = mongoose.Schema(
         endDate: {
             type: Date,
             required: false
+        },
+        orderStatus: {
+            type: String,
+            default: 'pending'
         }
 
     },

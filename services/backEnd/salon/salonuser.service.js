@@ -2,7 +2,7 @@ const httpStatus = require("http-status");
 const bcrypt = require("bcryptjs");
 const User = require("../../../models/user.model");
 const { Salon } = require("../../../models/backEnd/superAdmin");
-const all = async (salonId, branchId, status) => {
+const all = async (salonId, branchId, userId, status) => {
   try {
     const data = {
       ...(salonId != "all" && { salonId: ObjectId(salonId) }),
@@ -24,6 +24,7 @@ const all = async (salonId, branchId, status) => {
                 groupId: "$groupId",
                 userMobile: "$userMobile",
                 groupName: "$groups.groupName",
+                employeeSchedule: "$employeeSchedule",
 
                 status: "$status",
               },
@@ -49,6 +50,7 @@ const all = async (salonId, branchId, status) => {
             userMobile: "$userMobile",
             groupName: "$groups.groupName",
             status: "$status",
+            employeeSchedule: "$employeeSchedule",
           },
         },
       ]);
@@ -76,7 +78,6 @@ const all = async (salonId, branchId, status) => {
         return { ...item };
       })
     );
-
     return { status: httpStatus.OK, data: userdata };
   } catch (error) {
     console.log(error);

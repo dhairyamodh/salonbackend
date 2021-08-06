@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { getToFix } = require('../../../commonFunction/functionList');
 const { serviceValidation } = require('../../../validations/backEnd/superAdmin')
 const isSalonAdmin = (role) => {
     return role === 'salonadmin'
@@ -44,6 +45,8 @@ const create = async (db, data, files) => {
         }
         const discount = 100 * (price - salePrice) / price;
         data.discount = discount.toFixed(0)
+        data.salePrice = getToFix(data.salePrice)
+        data.price = getToFix(data.price)
         if (isSalonAdmin(data.role) ? await db.SalonService.findOne({ name: data.name }) : await db.BranchService.findOne({ name: data.name })) {
             return ({ status: httpStatus.NOT_FOUND, message: "Service name must be different!" })
         }
@@ -62,17 +65,19 @@ const update = async (db, data, files) => {
         if (error) {
             return ({ status: httpStatus.NOT_FOUND, message: error.details[0].message })
         }
-        if (files) {
+        if (files.length > 0) {
             files.map(file => {
                 data.imageSrc = file.destination + '/' + file.filename
             })
+        } else {
+            delete data.imageSrc
         }
-        const salePrice = parseFloat(data.salePrice)
-        const price = parseFloat(data.price)
-        if (price < salePrice) {
+        data.salePrice = parseFloat(data.salePrice).toFixed(2)
+        data.price = parseFloat(data.price).toFixed(2)
+        if (data.price > data.salePrice) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
         }
-        const discount = 100 * (price - salePrice) / price;
+        const discount = 100 * (data.price - data.salePrice) / data.price;
         data.discount = discount.toFixed(0)
         if (isSalonAdmin(data.role)) {
             await db.SalonService.findByIdAndUpdate(data.id, { ...data, categoryId: data.categoryId != 'null' ? data.categoryId : undefined })

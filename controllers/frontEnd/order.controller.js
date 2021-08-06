@@ -12,6 +12,11 @@ const create = catchAsync(async (req, res) => {
     res.status(response.status).send(response);
 });
 
+const update = catchAsync(async (req, res) => {
+    const response = await orderService.update(global.salons[req.body.salonId], req.body);
+    res.status(response.status).send(response);
+});
+
 const getOrderById = catchAsync(async (req, res) => {
     const response = await orderService.getOrderById(global.salons[req.query.salonId], req.query.data);
     res.status(response.status).send(response);
@@ -19,5 +24,5 @@ const getOrderById = catchAsync(async (req, res) => {
 
 
 module.exports = {
-    create, getAvailableTime, getOrderById
+    create, getAvailableTime, getOrderById, update
 };

@@ -3,7 +3,7 @@ const { salonUserService } = require('../../../services/backEnd/salon');
 const { statusCheck } = require('../../../commonFunction/functionList')
 
 const all = catchAsync(async (req, res) => {
-    const response = await salonUserService.all(req.query.salonId, req.query.branchId, statusCheck(req.query.status));
+    const response = await salonUserService.all(req.query.salonId, req.query.branchId, req.userId, statusCheck(req.query.status));
     res.status(response.status).send(response);
 });
 

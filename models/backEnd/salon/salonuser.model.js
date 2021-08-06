@@ -38,6 +38,10 @@ const salonUserSchema = mongoose.Schema(
         status: {
             type: Boolean,
             default: true,
+        },
+        employeeSchedule: {
+            type: Array,
+            required: false
         }
     },
     {

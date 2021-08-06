@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { getToFix } = require('../../commonFunction/functionList');
 
 const trendingServices = async (db, branchId, status) => {
     try {
@@ -38,9 +39,9 @@ const trendingServices = async (db, branchId, status) => {
             services = await Promise.all(await allservices.map(async (singleitem) => {
                 if (singleitem.categoryId) {
                     let category = singleitem.branchId != undefined ? await db.BranchCategory.findById(singleitem.categoryId) : await db.SalonCategory.findById(singleitem.categoryId)
-                    return { ...singleitem._doc, categoryName: category && category.categoryName, id: singleitem._doc._id }
+                    return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: category && category.categoryName, id: singleitem._doc._id }
                 } else {
-                    return { ...singleitem._doc, categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }
+                    return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }
                 }
             }))
         }
@@ -59,9 +60,9 @@ const categoryServices = async (db, branchId, categoryId, status) => {
         const servicedata = await Promise.all(await services.map(async (singleitem) => {
             if (singleitem.categoryId) {
                 let category = singleitem.branchId != undefined ? await db.BranchCategory.findById(singleitem.categoryId) : await db.SalonCategory.findById(singleitem.categoryId)
-                return { ...singleitem._doc, categoryName: category && category.categoryName, id: singleitem._doc._id }
+                return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: category && category.categoryName, id: singleitem._doc._id }
             } else {
-                return { ...singleitem._doc, categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }
+                return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }
             }
         }))
         return ({ status: httpStatus.OK, data: servicedata, })
@@ -82,7 +83,7 @@ const getServiceById = async (db, branchId, id) => {
         } else {
             categoryName = categoryName ? categoryName : undefined
         }
-        return ({ status: httpStatus.OK, data: { ...services._doc, categoryName: categoryName }, })
+        return ({ status: httpStatus.OK, data: { ...services._doc, categoryName: categoryName, salePrice: getToFix(services.salePrice), price: getToFix(services.price), }, })
 
     } catch (error) {
         console.log(error);

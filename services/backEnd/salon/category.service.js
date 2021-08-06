@@ -101,10 +101,12 @@ const update = async (data, files) => {
         };
       }
     }
-    if (files) {
+    if (files.length > 0) {
       files.map((file) => {
         data.categoryImage = file.destination + "/" + file.filename;
       });
+    } else {
+      delete data.categoryImage
     }
     isSuperadminRole(data.role)
       ? await Category.findByIdAndUpdate(data.id, data)

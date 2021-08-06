@@ -47,6 +47,18 @@ const create = async (db, data) => {
     }
 }
 
+const update = async (db, data) => {
+    try {
+        const updatedOrder = await db.Order.findByIdAndUpdate(data.id, data, { new: true });
+        // const updatedOrder = await db.Order.findById(data.id);
+
+        return { status: httpStatus.OK, message: "Order Updated Successfully", data: updatedOrder };
+    } catch (error) {
+        console.log(error);
+        return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
+    }
+};
+
 const getOrderById = async (db, data) => {
     try {
         const order = await db.Order.findById(data)
@@ -59,5 +71,5 @@ const getOrderById = async (db, data) => {
 }
 
 module.exports = {
-    create, getAvailableTime, getOrderById
+    create, getAvailableTime, getOrderById, update
 }

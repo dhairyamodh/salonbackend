@@ -117,10 +117,12 @@ const update = async (data, files) => {
         message: error.details[0].message,
       };
     }
-    if (files) {
+    if (files.length > 0) {
       files.map((file) => {
         data.logo = file.destination + "/" + file.filename;
       });
+    } else {
+      delete data.logo
     }
 
     await Salon.findByIdAndUpdate(data._id || data.id, data);

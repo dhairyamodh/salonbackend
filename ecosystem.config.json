@@ -6,7 +6,10 @@
       "instances": 1,
       "autorestart": true,
       "watch": true,
-      "ignore_watch": ["uploaded"],
+      "ignore_watch": ["uploaded", "logs"],
+      "watch_options": {
+        "followSymlinks": false
+      },
       "time": true,
       "env": {
         "NODE_ENV": "production"
