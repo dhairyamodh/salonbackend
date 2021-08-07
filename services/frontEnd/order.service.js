@@ -1,23 +1,134 @@
 const httpStatus = require('http-status');
-const { Salon } = require('../../models/backEnd/superAdmin');
 const { DATETIMEFORMAT } = require('../../commonFunction/objectList')
 const moment = require('moment')
 moment.suppressDeprecationWarnings = true;
 
+let getGenTime = (timeString) => {
+    let H = +timeString.substr(0, 2);
+    let h = (H % 12) || 12;
+    let ampm = H < 12 ? " AM" : " PM";
+    let time = timeString = h + timeString.substr(2, 3) + ampm
+    return moment(time, ["h:mm A"]).format("HH:mm")
+}
 
-const getAvailableTime = async (salonId, branchId, date) => {
+
+function returnTimesInBetween(start, end) {
+    var timesInBetween = [];
+
+    var startH = parseInt(start.split(":")[0]);
+    var startM = parseInt(start.split(":")[1]);
+    var endH = parseInt(end.split(":")[0]);
+    var endM = parseInt(end.split(":")[1]);
+
+    if (startM == 30)
+        startH++;
+
+    for (var i = startH; i < endH; i++) {
+        timesInBetween.push(i < 10 ? "0" + i + ":00" : i + ":00");
+        timesInBetween.push(i < 10 ? "0" + i + ":30" : i + ":30");
+    }
+
+    timesInBetween.push(endH + ":00");
+    if (endM == 30)
+        timesInBetween.push(endH + ":30")
+
+    return timesInBetween.map(getGenTime);
+}
+
+
+const getAvailableArtist = async (db, branchId, date) => {
     try {
-        const startDate = date.split("T")[0]
-        console.log('startDate', new Date(startDate).setHours(0, 0, 0, 0));
-        // const data = (branchId != undefined && { branchId: ObjectId(branchId) })
-        // const orders = await global.salons[salonId].Order.find({
-        //     "startDate": {
-        //         $gte: new Date(startDate).setHours(10, 0, 0, 0),
-        //     },
-        //     ...data
-        // })
-        // console.log('orders', orders);
-        return ({ status: httpStatus.OK })
+        const dayName = moment(date).format('ddd')
+        const artist = await db.SalonUser.aggregate([
+            {
+                $match: {
+                    userRole: 'employee',
+                    status: true
+                },
+
+            },
+        ])
+
+        const getAvailableArtist = await artist.filter((ar) => {
+            const day = ar.employeeSchedule.find((sc) => sc.dayName === dayName)
+            if (day.isWorking) {
+                return true
+            }
+            return false
+        })
+
+        return ({ status: httpStatus.OK, data: getAvailableArtist })
+    } catch (error) {
+        console.log(error);
+        return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+    }
+}
+
+const getAvailableTime = async (db, branchId, data) => {
+    try {
+
+        const artist = await db.SalonUser.findById(data._id)
+        const dayName = moment(data.date).format('ddd')
+
+        const getTime = artist.employeeSchedule.find((ar) => {
+            return ar.dayName === dayName
+        })
+        let fromtime = getTime.startTime
+
+        let totime = getTime.endTime
+        let allArtistTime = returnTimesInBetween(fromtime, totime)
+        // let x = {
+        //     slotInterval: 30,
+        //     openTime: getTime.startTime,
+        //     closeTime: getTime.endTime
+        // };
+
+        // let startTime = moment(x.openTime, "HH:mm");
+
+        // let endTime = moment(x.closeTime, "HH:mm").add(1, 'days');
+
+        // let allArtistTime = [];
+
+        // while (startTime < endTime) {
+        //     //Push times
+        //     allArtistTime.push(startTime.format("HH:mm"));
+        //     //Add interval of 30 minutes
+        //     startTime.add(x.slotInterval, 'minutes');
+        // }
+
+        let bookingTime = []
+
+        const getBookingTime = await db.Order.aggregate([
+            {
+                $match: {
+                    employeeId: ObjectId(data._id),
+                    $and: [
+                        {
+                            "startDate":
+                            {
+                                $gte: moment(data.date).startOf("day").toDate(),
+                                $lte: moment(data.date).endOf("day").toDate()
+                            }
+                        },
+                    ]
+
+                },
+
+            },
+        ])
+
+        await getBookingTime.map((booking) => {
+            bookingTime.push(booking.startTime)
+        })
+
+        // console.log('bookingTime', bookingTime, allArtistTime);
+        const newArray = allArtistTime.filter(obj => !bookingTime.includes(obj));
+        const currentTime = moment().format("HH:mm")
+        const currentTimeArr = returnTimesInBetween('00:00', currentTime)
+        const availableTime = newArray.filter(obj => !currentTimeArr.includes(obj))
+        // console.log('newArray', newArray, availableTime);
+
+        return ({ status: httpStatus.OK, data: availableTime })
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -26,7 +137,9 @@ const getAvailableTime = async (salonId, branchId, date) => {
 
 const create = async (db, data) => {
     try {
-        const time = moment(data.selectedTime, ["h:mm A"]).format("HH:mm");
+        // const time = moment(data.selectedTime, ["h:mm A"]).format("HH:mm");
+        const time = data.selectedTime;
+
         const lastOrder = await db.Order.find({
             branchId: data.branchId != undefined ? data.branchId : undefined,
         })
@@ -71,5 +184,5 @@ const getOrderById = async (db, data) => {
 }
 
 module.exports = {
-    create, getAvailableTime, getOrderById, update
+    create, getAvailableTime, getOrderById, update, getAvailableArtist
 }

@@ -4,7 +4,7 @@ const { getToFix } = require('../../commonFunction/functionList');
 const trendingServices = async (db, branchId, status) => {
     try {
         const data = { ...(branchId != undefined && { branchId: ObjectId(branchId) }), ...status }
-        const sellingorders = await db.Order.find(data)
+        const sellingorders = await db.Order.find()
         let services = [];
         if (sellingorders.length >= 5) {
             sellingorders.map(async (order) => {

@@ -94,6 +94,31 @@ const orderSchema = mongoose.Schema(
         orderStatus: {
             type: String,
             default: 'pending'
+        },
+        employeeId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'salonusers',
+            required: false,
+        },
+        employeeName: {
+            type: String,
+            required: false,
+        },
+        paymentMethods: {
+            type: Array,
+            required: false,
+        },
+        totalPayment: {
+            type: Number,
+            required: false,
+        },
+        totalBalance: {
+            type: Number,
+            required: false,
+        },
+        totalCashReturn: {
+            type: Number,
+            required: false,
         }
 
     },

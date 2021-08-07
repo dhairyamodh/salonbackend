@@ -2,8 +2,13 @@ const catchAsync = require('../../utils/catchAsync');
 const { orderService } = require('../../services/frontEnd');
 
 
+const getAvailableArtist = catchAsync(async (req, res) => {
+    const response = await orderService.getAvailableArtist(global.salons[req.query.salonId], req.query.branchId, req.query.date);
+    res.status(response.status).send(response);
+});
+
 const getAvailableTime = catchAsync(async (req, res) => {
-    const response = await orderService.getAvailableTime(req.query.salonId, req.query.branchId, req.query.date);
+    const response = await orderService.getAvailableTime(global.salons[req.body.salonId], req.body.branchId, req.body);
     res.status(response.status).send(response);
 });
 
@@ -24,5 +29,5 @@ const getOrderById = catchAsync(async (req, res) => {
 
 
 module.exports = {
-    create, getAvailableTime, getOrderById, update
+    create, getAvailableTime, getOrderById, update, getAvailableArtist
 };
