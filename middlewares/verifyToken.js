@@ -16,6 +16,8 @@ async function auth(req, res, next) {
             return res.status(404).send({ message: "user not found" });
         }
         req.userId = verified._id;
+        req.salonUserId = users.salonUserId;
+
         const checkrole = users.role != 'customer'
         if (users.salonId && checkrole) {
             if (users.branchId) { req.branchId = users.branchId }

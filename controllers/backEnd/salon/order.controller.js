@@ -8,7 +8,7 @@ const all = catchAsync(async (req, res) => {
 });
 
 const getFilterBookings = catchAsync(async (req, res) => {
-    const response = await orderService.getFilterBookings(req.body.salonId, req.body);
+    const response = await orderService.getFilterBookings(req.body.salonId, req.salonUserId, req.body);
     res.status(response.status).send(response);
 });
 

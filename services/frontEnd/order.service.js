@@ -1,15 +1,6 @@
 const httpStatus = require('http-status');
-const { DATETIMEFORMAT } = require('../../commonFunction/objectList')
 const moment = require('moment')
 moment.suppressDeprecationWarnings = true;
-
-let getGenTime = (timeString) => {
-    let H = +timeString.substr(0, 2);
-    let h = (H % 12) || 12;
-    let ampm = H < 12 ? " AM" : " PM";
-    let time = timeString = h + timeString.substr(2, 3) + ampm
-    return moment(time, ["h:mm A"]).format("HH:mm")
-}
 
 
 function returnTimesInBetween(start, end) {
@@ -26,13 +17,14 @@ function returnTimesInBetween(start, end) {
     for (var i = startH; i < endH; i++) {
         timesInBetween.push(i < 10 ? "0" + i + ":00" : i + ":00");
         timesInBetween.push(i < 10 ? "0" + i + ":30" : i + ":30");
+
     }
 
     timesInBetween.push(endH + ":00");
     if (endM == 30)
         timesInBetween.push(endH + ":30")
 
-    return timesInBetween.map(getGenTime);
+    return timesInBetween;
 }
 
 
@@ -46,6 +38,17 @@ const getAvailableArtist = async (db, branchId, date) => {
                     status: true
                 },
 
+            },
+            {
+                $lookup: {
+                    from: "salonusergroups",
+                    localField: "groupId",
+                    foreignField: "_id",
+                    as: "groups",
+                },
+            },
+            {
+                $unwind: '$groups'
             },
         ])
 
@@ -77,24 +80,7 @@ const getAvailableTime = async (db, branchId, data) => {
 
         let totime = getTime.endTime
         let allArtistTime = returnTimesInBetween(fromtime, totime)
-        // let x = {
-        //     slotInterval: 30,
-        //     openTime: getTime.startTime,
-        //     closeTime: getTime.endTime
-        // };
 
-        // let startTime = moment(x.openTime, "HH:mm");
-
-        // let endTime = moment(x.closeTime, "HH:mm").add(1, 'days');
-
-        // let allArtistTime = [];
-
-        // while (startTime < endTime) {
-        //     //Push times
-        //     allArtistTime.push(startTime.format("HH:mm"));
-        //     //Add interval of 30 minutes
-        //     startTime.add(x.slotInterval, 'minutes');
-        // }
 
         let bookingTime = []
 
@@ -126,7 +112,7 @@ const getAvailableTime = async (db, branchId, data) => {
         const currentTime = moment().format("HH:mm")
         const currentTimeArr = returnTimesInBetween('00:00', currentTime)
         const availableTime = newArray.filter(obj => !currentTimeArr.includes(obj))
-        // console.log('newArray', newArray, availableTime);
+        // console.log('newArray', newArray, availableTime, currentTimeArr);
 
         return ({ status: httpStatus.OK, data: availableTime })
     } catch (error) {
@@ -147,7 +133,8 @@ const create = async (db, data) => {
             .limit(1);
 
         const orderNumber = lastOrder.length > 0 ? ++lastOrder[0].orderNumber : 1;
-        const order = await db.Order.create({ ...data, userName: data.name, userEmail: data.email, userMobile: data.mobile, orderItems: data.cartItems, startDate: data.selectedDate, startTime: time, orderNumber: orderNumber })
+        console.log(moment(data.selectedDate).format());
+        const order = await db.Order.create({ ...data, userName: data.name, userEmail: data.email, userMobile: data.mobile, orderItems: data.cartItems, startDate: moment(data.selectedDate).format(), startTime: time, orderNumber: orderNumber })
 
         if (order) {
             await db.Cart.findOneAndUpdate({ customerId: data.userId }, { $set: { items: [] } })

@@ -23,12 +23,13 @@ const all = async (salonId, branchId, start, end) => {
   }
 };
 
-const getFilterBookings = async (salonId, data) => {
+const getFilterBookings = async (salonId, salonUserId, data) => {
   try {
     const startDate = data.date.start.split("T")[0];
     const endDate = data.date.end.split("T")[0];
 
     const orderStatus = data.orderStatus != "all" ? data.orderStatus : undefined;
+    const employeeId = data.role == 'employee' ? salonUserId != undefined ? salonUserId : undefined : undefined
     const paymentTypeId =
       data.paymentTypeId != "all" ? data.paymentTypeId : undefined;
     const orders = await global.salons[salonId].Order.find({
@@ -38,6 +39,7 @@ const getFilterBookings = async (salonId, data) => {
       },
       ...(paymentTypeId && { paymentTypeId: paymentTypeId }),
       ...(orderStatus && { orderStatus: orderStatus }),
+      ...(employeeId && { employeeId: ObjectId(employeeId) })
       // ...data,
     });
     const filterOrders = [...orders.filter((a) => a.orderStatus == 'pending'), ...orders.filter((a) => a.orderStatus != 'pending')]

@@ -2,7 +2,7 @@ const httpStatus = require("http-status");
 const bcrypt = require("bcryptjs");
 const User = require("../../../models/user.model");
 const { Salon } = require("../../../models/backEnd/superAdmin");
-const all = async (salonId, branchId, userId, status) => {
+const all = async (salonId, branchId, salonUserId, status) => {
   try {
     const data = {
       ...(salonId != "all" && { salonId: ObjectId(salonId) }),
@@ -78,7 +78,7 @@ const all = async (salonId, branchId, userId, status) => {
         return { ...item };
       })
     );
-    return { status: httpStatus.OK, data: userdata };
+    return { status: httpStatus.OK, data: userdata.filter(user => JSON.stringify(user._id) !== JSON.stringify(salonUserId)) };
   } catch (error) {
     console.log(error);
     return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
