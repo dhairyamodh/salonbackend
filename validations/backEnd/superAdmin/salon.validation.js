@@ -11,7 +11,7 @@ const create = (data) => {
         tagLine: Joi.string(),
         themeId: Joi.string().required(),
         logo: Joi.string(),
-        balance: Joi.number().required(),
+        // balance: Joi.number().required(),
         cgst: Joi.number().integer().required(),
         sgst: Joi.number().integer().required(),
         status: Joi.string().required()
