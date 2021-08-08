@@ -12,7 +12,7 @@ const create = (data) => {
         themeId: Joi.string().required(),
         themeId: Joi.string().required(),
         logo: Joi.string(),
-        taxPercentage: Joi.number().integer().required(),
+        taxPercentage: Joi.number().required(),
         // balance: Joi.number().required(),
         // cgst: Joi.number().integer().required(),
         // sgst: Joi.number().integer().required(),
