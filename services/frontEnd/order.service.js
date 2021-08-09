@@ -64,6 +64,8 @@ const getAvailableArtist = async (db, branchId, date) => {
         )
         const getAvailableArtist = newArtist.filter((ar) => {
             const day = ar.employeeSchedule.find((sc) => sc.dayName === dayName)
+            console.log('day', day, dayName);
+
             if (day) {
                 if (day.isWorking) {
                     return true
@@ -71,6 +73,7 @@ const getAvailableArtist = async (db, branchId, date) => {
             }
             return false
         })
+        console.log('getAvailableArtist', getAvailableArtist);
         return ({ status: httpStatus.OK, data: getAvailableArtist })
     } catch (error) {
         console.log(error);
