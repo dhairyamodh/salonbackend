@@ -39,27 +39,38 @@ const getAvailableArtist = async (db, branchId, date) => {
                 },
 
             },
-            {
-                $lookup: {
-                    from: "salonusergroups",
-                    localField: "groupId",
-                    foreignField: "_id",
-                    as: "groups",
-                },
-            },
-            {
-                $unwind: '$groups'
-            },
+            // {
+            //     $lookup: {
+            //         from: "salonusergroups",
+            //         localField: "groupId",
+            //         foreignField: "_id",
+            //         as: "groups",
+            //     },
+            // },
+            // {
+            //     $unwind: { path: '$groups', preserveNullAndEmptyArrays: true }
+            // },
         ])
-
-        const getAvailableArtist = await artist.filter((ar) => {
+        const newArtist = await Promise.all(
+            artist.map(async (artist) => {
+                if (artist.groupId) {
+                    const group = await db.SalonUserGroup.findById(artist.groupId);
+                    if (group)
+                        return { ...artist, groups: group }
+                    return artist
+                }
+                return artist
+            })
+        )
+        const getAvailableArtist = newArtist.filter((ar) => {
             const day = ar.employeeSchedule.find((sc) => sc.dayName === dayName)
-            if (day.isWorking) {
-                return true
+            if (day) {
+                if (day.isWorking) {
+                    return true
+                }
             }
             return false
         })
-
         return ({ status: httpStatus.OK, data: getAvailableArtist })
     } catch (error) {
         console.log(error);

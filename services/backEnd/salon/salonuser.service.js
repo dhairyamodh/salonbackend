@@ -135,14 +135,14 @@ const update = async (data) => {
         };
       }
     }
-
     await global.salons[data.salonId].SalonUser.findByIdAndUpdate(
       data._id,
-      data
+      data,
     );
+
     await User.findOneAndUpdate(
       { salonUserId: data._id },
-      { name: data.userName, mobile: data.userMobile }
+      { name: data.userName, mobile: data.userMobile, }
     );
     return { status: httpStatus.OK, message: "User Updated Successfully" };
   } catch (error) {
