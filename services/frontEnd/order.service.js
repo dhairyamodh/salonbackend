@@ -64,8 +64,6 @@ const getAvailableArtist = async (db, branchId, date) => {
         )
         const getAvailableArtist = newArtist.filter((ar) => {
             const day = ar.employeeSchedule.find((sc) => sc.dayName === dayName)
-            console.log('day', day, dayName);
-
             if (day) {
                 if (day.isWorking) {
                     return true
@@ -73,7 +71,6 @@ const getAvailableArtist = async (db, branchId, date) => {
             }
             return false
         })
-        console.log('getAvailableArtist', getAvailableArtist);
         return ({ status: httpStatus.OK, data: getAvailableArtist })
     } catch (error) {
         console.log(error);
@@ -123,10 +120,14 @@ const getAvailableTime = async (db, branchId, data) => {
 
         // console.log('bookingTime', bookingTime, allArtistTime);
         const newArray = allArtistTime.filter(obj => !bookingTime.includes(obj));
+        const currentDate = moment().endOf('day').toDate().getTime()
+        const date = moment(data.date).toDate().getTime()
         const currentTime = moment().format("HH:mm")
+        console.log('currentTime', currentTime);
+
         const currentTimeArr = returnTimesInBetween('00:00', currentTime)
-        const availableTime = newArray.filter(obj => !currentTimeArr.includes(obj))
-        // console.log('newArray', newArray, availableTime, currentTimeArr);
+        const availableTime = currentDate === date ? newArray.filter(obj => !currentTimeArr.includes(obj)) : newArray
+        console.log('newArray', newArray, availableTime, currentTimeArr);
 
         return ({ status: httpStatus.OK, data: availableTime })
     } catch (error) {
