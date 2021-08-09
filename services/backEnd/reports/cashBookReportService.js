@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const moment = require('moment');
-const { getToFix } = require('../../../commonFunction/objectList');
+const { getToFix } = require('../../../commonFunction/functionList');
 const getFormattedDate = (date, format) => {
     return moment(date).utcOffset("+05:30").format(format);
 };

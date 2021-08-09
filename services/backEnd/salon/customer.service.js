@@ -1,6 +1,4 @@
 const httpStatus = require("http-status");
-const { Salon } = require("../../../models/backEnd/superAdmin");
-const { DATETIMEFORMAT } = require("../../../commonFunction/objectList");
 const moment = require("moment");
 moment.suppressDeprecationWarnings = true;
 

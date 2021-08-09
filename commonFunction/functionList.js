@@ -11,7 +11,10 @@ const statusCheck = (status) => {
 }
 
 const getToFix = (value, decimal) => {
-    return value ? value.toFixed(decimal || 2) : 0
+    if (typeof value === "string") {
+        return parseFloat(parseFloat(value).toFixed(decimal || 2));
+    }
+    return parseFloat(value.toFixed(decimal || 2));
 }
 
 

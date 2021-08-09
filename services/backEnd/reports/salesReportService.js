@@ -4,7 +4,7 @@ const getFormattedDate = (date, format) => {
     return moment(date).utcOffset("+05:30").format(format);
 };
 
-const { getToFix } = require('../../../commonFunction/objectList')
+const { getToFix } = require('../../../commonFunction/functionList')
 
 const getReport = async (db, data) => {
     try {
