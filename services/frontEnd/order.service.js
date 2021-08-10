@@ -120,8 +120,8 @@ const getAvailableTime = async (db, branchId, data) => {
 
         // console.log('bookingTime', bookingTime, allArtistTime);
         const newArray = allArtistTime.filter(obj => !bookingTime.includes(obj));
-        const currentDate = moment().endOf('day').toDate().getTime()
-        const date = moment(data.date).toDate().getTime()
+        const currentDate = moment().format('DD/MM/YYYY')
+        const date = moment(data.date).format('DD/MM/YYYY')
         const currentTime = moment().format("HH:mm")
         console.log('currentTime', currentTime, currentDate === date, date, currentDate);
 
