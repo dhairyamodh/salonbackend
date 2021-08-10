@@ -123,7 +123,7 @@ const getAvailableTime = async (db, branchId, data) => {
         const currentDate = moment().endOf('day').toDate().getTime()
         const date = moment(data.date).toDate().getTime()
         const currentTime = moment().format("HH:mm")
-        console.log('currentTime', currentTime);
+        console.log('currentTime', currentTime, currentDate === date, date, currentDate);
 
         const currentTimeArr = returnTimesInBetween('00:00', currentTime)
         const availableTime = currentDate === date ? newArray.filter(obj => !currentTimeArr.includes(obj)) : newArray
