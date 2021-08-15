@@ -74,7 +74,7 @@ const update = async (db, data, files) => {
         }
         data.salePrice = parseFloat(data.salePrice).toFixed(2)
         data.price = parseFloat(data.price).toFixed(2)
-        if (data.price > data.salePrice) {
+        if (data.price < data.salePrice) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
         }
         const discount = 100 * (data.price - data.salePrice) / data.price;
