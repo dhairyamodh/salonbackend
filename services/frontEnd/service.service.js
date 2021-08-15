@@ -10,6 +10,8 @@ const trendingServices = async (db, branchId, status) => {
             sellingorders.map(async (order) => {
                 let currentServices = order.orderItems;
                 currentServices.forEach(async (currItem) => {
+                    currItem.salePrice = getToFix(currItem.salePrice)
+                    currItem.price = getToFix(currItem.price)
                     let serviceindex = services.findIndex(
                         (indexItem) => indexItem.id === currItem.id
                     );
@@ -39,6 +41,7 @@ const trendingServices = async (db, branchId, status) => {
             services = await Promise.all(await allservices.map(async (singleitem) => {
                 if (singleitem.categoryId) {
                     let category = singleitem.branchId != undefined ? await db.BranchCategory.findById(singleitem.categoryId) : await db.SalonCategory.findById(singleitem.categoryId)
+                    // console.log('sdsd', getToFix(singleitem._doc.salePrice));
                     return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: category && category.categoryName, id: singleitem._doc._id }
                 } else {
                     return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }

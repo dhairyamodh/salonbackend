@@ -14,7 +14,7 @@ const getToFix = (value, decimal) => {
     if (typeof value === "string") {
         return parseFloat(parseFloat(value).toFixed(decimal || 2));
     }
-    return parseFloat(value.toFixed(decimal || 2));
+    return value.toFixed(decimal || 2);
 }
 
 
