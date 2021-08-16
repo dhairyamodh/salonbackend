@@ -83,7 +83,6 @@ const update = async (db, data, files) => {
             await db.SalonService.findByIdAndUpdate(data.id, { ...data, categoryId: data.categoryId != 'null' ? data.categoryId : undefined })
         } else {
             if (data.categoryId) {
-                console.log('if')
                 await db.BranchService.update({ _id: data.id }, {
                     ...data
                 })

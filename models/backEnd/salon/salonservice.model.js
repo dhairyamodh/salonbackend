@@ -56,10 +56,6 @@ salonServiceSchema.plugin(toJSON);
 salonServiceSchema.plugin(paginate);
 
 
-salonServiceSchema.path('price').set(function (num) {
-    return num.toFixed(2);
-});
-
 const SalonService = mongoose.model('SalonService', salonServiceSchema);
 
 module.exports = { salonServiceSchema, SalonService }
