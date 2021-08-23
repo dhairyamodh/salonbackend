@@ -20,7 +20,7 @@ const register = async (data) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(data.password, salt);
-        const createUser = await User.create({ ...data, password: hashPassword, mobile: 'null' })
+        const createUser = await User.create({ ...data, password: hashPassword })
         if (createUser) {
             await global.salons[data.salonId].Customer.create({ ...data, password: hashPassword, })
             const token = jwt.sign({ _id: createUser._id }, process.env.JWT_SECRET);
