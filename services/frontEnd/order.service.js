@@ -127,9 +127,12 @@ const getAvailableTime = async (db, branchId, data) => {
 
         const currentTimeArr = returnTimesInBetween('00:00', currentTime)
         const availableTime = currentDate === date ? newArray.filter(obj => !currentTimeArr.includes(obj)) : newArray
-        console.log('newArray', newArray, availableTime, currentTimeArr);
+        const newAvailableTime = await Promise.all(availableTime.map((time) => {
+            return moment(time, ["HH:mm"]).format("h:mm A")
+        }))
+        console.log('newArray', newArray, availableTime, newAvailableTime);
 
-        return ({ status: httpStatus.OK, data: availableTime })
+        return ({ status: httpStatus.OK, data: newAvailableTime })
     } catch (error) {
         console.log(error);
         return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
@@ -138,8 +141,15 @@ const getAvailableTime = async (db, branchId, data) => {
 
 const create = async (db, data) => {
     try {
-        // const time = moment(data.selectedTime, ["h:mm A"]).format("HH:mm");
-        const time = data.selectedTime;
+        const time = moment(data.selectedTime, ["h:mm A"]).format("HH:mm");
+        // const time = data.selectedTime;
+        const checkIfServiceIsNextDay = data.cartItems?.find((a) => {
+            return a.nextDayService === true
+        })
+
+        if (checkIfServiceIsNextDay) {
+            data.orderStatus = 'pending'
+        }
 
         const lastOrder = await db.Order.find({
             branchId: data.branchId != undefined ? data.branchId : undefined,

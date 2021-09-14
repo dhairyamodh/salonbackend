@@ -93,7 +93,7 @@ const orderSchema = mongoose.Schema(
         },
         orderStatus: {
             type: String,
-            default: 'pending'
+            default: 'confirmed'
         },
         employeeId: {
             type: mongoose.SchemaTypes.ObjectId,

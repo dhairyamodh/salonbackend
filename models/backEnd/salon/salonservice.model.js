@@ -41,6 +41,10 @@ const salonServiceSchema = mongoose.Schema(
             type: String,
             required: false,
         },
+        nextDayService: {
+            type: Boolean,
+            default: true
+        },
         status: {
             type: Boolean,
             default: true

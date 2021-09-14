@@ -72,12 +72,12 @@ const update = async (db, data, files) => {
         } else {
             delete data.imageSrc
         }
-        data.salePrice = parseFloat(data.salePrice).toFixed(2)
-        data.price = parseFloat(data.price).toFixed(2)
-        if (data.price < data.salePrice) {
+        const salePrice = parseFloat(data.salePrice)
+        const price = parseFloat(data.price)
+        if (price < salePrice) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Price must be a greater than sale price" })
         }
-        const discount = 100 * (data.price - data.salePrice) / data.price;
+        const discount = 100 * (price - salePrice) / price;
         data.discount = discount.toFixed(0)
         if (isSalonAdmin(data.role)) {
             await db.SalonService.findByIdAndUpdate(data.id, { ...data, categoryId: data.categoryId != 'null' ? data.categoryId : undefined })
