@@ -143,7 +143,7 @@ const create = async (db, data) => {
     try {
         const time = moment(data.selectedTime, ["h:mm A"]).format("HH:mm");
         // const time = data.selectedTime;
-        const checkIfServiceIsNextDay = data.cartItems?.find((a) => {
+        const checkIfServiceIsNextDay = data.cartItems.find((a) => {
             return a.nextDayService === true
         })
 
