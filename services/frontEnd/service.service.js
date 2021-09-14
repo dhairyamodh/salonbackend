@@ -3,51 +3,63 @@ const { getToFix } = require('../../commonFunction/functionList');
 
 const trendingServices = async (db, branchId, status) => {
     try {
-        const data = { ...(branchId != undefined && { branchId: ObjectId(branchId) }), ...status }
+        const data = { ...status }
         const sellingorders = await db.Order.find()
         let services = [];
-        if (sellingorders.length >= 5) {
-            sellingorders.map(async (order) => {
-                let currentServices = order.orderItems;
-                currentServices.forEach(async (currItem) => {
-                    currItem.salePrice = getToFix(currItem.salePrice)
-                    currItem.price = getToFix(currItem.price)
-                    let serviceindex = services.findIndex(
-                        (indexItem) => indexItem.id === currItem.id
-                    );
-                    if (serviceindex === -1) {
-                        let pushItem = currItem;
-                        let itemTotalSold = currItem.itemTotal;
-                        pushItem.totalSold = itemTotalSold;
-                        services.push(pushItem);
-                    } else {
-                        let totalSold = services[serviceindex].totalSold
-                            ? services[serviceindex].totalSold
-                            : 0;
+        // if (sellingorders.length >= 5) {
+        //     sellingorders.map(async (order) => {
+        //         let currentServices = order.orderItems;
+        //         const newservices = await Promise.all(currentServices.map(async (service, index) => {
+        //             const getservices = await db.SalonService.findOne({ _id: service._id || service.id, ...status })
+        //             // console.log("getservices", service, index);
+        //             if (getservices && getservices !== null) {
+        //                 return { ...service, ...getservices }
 
-                        let currTotalSold = services[serviceindex].totalSold + currItem.itemTotal;
+        //             }
+        //             return service
+        //         }))
+        //         // console.log("getservices", newservices);
 
-                        services[serviceindex] = {
-                            ...services[serviceindex],
-                            quantity: services[serviceindex].quantity + currItem.quantity,
-                            totalSold: currTotalSold,
-                        };
-                    }
-                    //
-                });
-            });
-        } else {
-            const allservices = branchId != undefined ? await db.BranchService.find(data).limit(10) : await db.SalonService.find(data).limit(10)
-            services = await Promise.all(await allservices.map(async (singleitem) => {
-                if (singleitem.categoryId) {
-                    let category = singleitem.branchId != undefined ? await db.BranchCategory.findById(singleitem.categoryId) : await db.SalonCategory.findById(singleitem.categoryId)
-                    // console.log('sdsd', getToFix(singleitem._doc.salePrice));
-                    return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: category && category.categoryName, id: singleitem._doc._id }
-                } else {
-                    return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }
-                }
-            }))
-        }
+        //         newservices.forEach(async ({ _doc: currItem }) => {
+        //             console.log('currItem', currItem._id, currItem.salePrice);
+        //             currItem.salePrice = getToFix(currItem.salePrice)
+        //             currItem.price = getToFix(currItem.price)
+        //             let serviceindex = services.findIndex(
+        //                 (indexItem) => indexItem.id === currItem.id
+        //             );
+        //             if (serviceindex === -1) {
+        //                 let pushItem = currItem;
+        //                 let itemTotalSold = currItem.itemTotal;
+        //                 pushItem.totalSold = itemTotalSold;
+        //                 services.push(pushItem);
+        //             } else {
+        //                 let totalSold = services[serviceindex].totalSold
+        //                     ? services[serviceindex].totalSold
+        //                     : 0;
+
+        //                 let currTotalSold = services[serviceindex].totalSold + currItem.itemTotal;
+
+        //                 services[serviceindex] = {
+        //                     ...services[serviceindex],
+        //                     quantity: services[serviceindex].quantity + currItem.quantity,
+        //                     totalSold: currTotalSold,
+        //                 };
+        //             }
+        //             //
+        //         });
+        //     });
+        // } else {
+        const allservices = branchId != undefined ? await db.BranchService.find(data).limit(10) : await db.SalonService.find(data).limit(10)
+        services = await Promise.all(await allservices.map(async (singleitem) => {
+            if (singleitem.categoryId) {
+                let category = singleitem.branchId != undefined ? await db.BranchCategory.findById(singleitem.categoryId) : await db.SalonCategory.findById(singleitem.categoryId)
+                // console.log('sdsd', getToFix(singleitem._doc.salePrice));
+                return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: category && category.categoryName, id: singleitem._doc._id }
+            } else {
+                return { ...singleitem._doc, salePrice: getToFix(singleitem._doc.salePrice), price: getToFix(singleitem._doc.price), categoryName: singleitem._doc.categoryName ? singleitem._doc.categoryName : undefined, id: singleitem._doc._id }
+            }
+        }))
+        // }
         return ({ status: httpStatus.OK, data: services, })
     } catch (error) {
         console.log(error);
