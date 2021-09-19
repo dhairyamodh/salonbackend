@@ -175,8 +175,6 @@ const create = async (db, data) => {
 const update = async (db, data) => {
     try {
         const updatedOrder = await db.Order.findByIdAndUpdate(data.id, data, { new: true });
-        // const updatedOrder = await db.Order.findById(data.id);
-
         return { status: httpStatus.OK, message: "Order Updated Successfully", data: updatedOrder };
     } catch (error) {
         console.log(error);
