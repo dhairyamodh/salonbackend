@@ -119,7 +119,16 @@ const orderSchema = mongoose.Schema(
         totalCashReturn: {
             type: Number,
             required: false,
+        },
+        tipAmount: {
+            type: Number,
+            required: false,
+        },
+        tipPercentage: {
+            type: Number,
+            required: false,
         }
+
 
     },
     {

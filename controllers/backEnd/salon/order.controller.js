@@ -16,6 +16,11 @@ const create = catchAsync(async (req, res) => {
     res.status(response.status).send(response);
 });
 
+const checkoutOrder = catchAsync(async (req, res) => {
+    const response = await orderService.checkoutOrder(req.body);
+    res.status(response.status).send(response);
+});
+
 const update = catchAsync(async (req, res) => {
     const response = await orderService.update(req.body);
     res.status(response.status).send(response);
@@ -26,6 +31,11 @@ const remove = catchAsync(async (req, res) => {
     res.status(response.status).send(response);
 });
 
+const applyCoupon = catchAsync(async (req, res) => {
+    const response = await orderService.applyCoupon(global.salons[req.body.salonId], req.body);
+    res.status(response.status).send(response);
+});
+
 module.exports = {
-    create, update, remove, all, getFilterBookings
+    create, update, remove, all, getFilterBookings, checkoutOrder, applyCoupon
 };

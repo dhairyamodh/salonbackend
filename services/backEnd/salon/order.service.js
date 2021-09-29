@@ -63,6 +63,12 @@ const create = async (data) => {
     } else {
       data.branchOrderNumber = data.branchCode + data.orderNumber;
     }
+    const checkOrderNumber = await global.salons[data.salonId].Order.find({
+      orderNumber: data.orderNumber,
+    })
+    if (checkOrderNumber.length > 0) {
+      return { status: httpStatus.INTERNAL_SERVER_ERROR, message: "Order already exist" };
+    }
     const order = await global.salons[data.salonId].Order.create(data);
     if (order) {
       if (data.customerMobile) {
@@ -101,6 +107,13 @@ const create = async (data) => {
   }
 };
 
+const checkoutOrder = async (data) => {
+  const createorder = await create(data)
+  console.log(createorder);
+  global.sendSocketMessage(JSON.stringify(createorder.data))
+  return createorder;
+};
+
 const update = async (data) => {
   try {
     const updatedOrder = await global.salons[data.salonId].Order.findByIdAndUpdate(data.id, data, { new: true });
@@ -119,10 +132,26 @@ const remove = async (data) => {
   }
 };
 
+const applyCoupon = async (db, data) => {
+  try {
+    const checkCouponCode = await db.Deals.findOne({ dealCode: data.coupon })
+    if (checkCouponCode) {
+      return ({ status: httpStatus.OK, data: checkCouponCode })
+    }
+    return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Invalid Code" })
+
+  } catch (error) {
+    console.log(error);
+    return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: error })
+  }
+}
+
 module.exports = {
   create,
   all,
   update,
   remove,
-  getFilterBookings
+  getFilterBookings,
+  checkoutOrder,
+  applyCoupon
 };

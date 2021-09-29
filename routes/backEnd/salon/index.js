@@ -25,7 +25,7 @@ router.use('/services', verify, services);
 router.use('/userGroup', verify, userGroup);
 // router.use('/hotkeys', verify, hotkey);
 router.use('/chairs', verify, chair);
-router.use('/orders', verify, order);
+router.use('/orders', order);
 router.use('/customers', verify, customer);
 router.use('/users', verify, user);
 router.use('/reports', verify, report);

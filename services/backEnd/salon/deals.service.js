@@ -9,8 +9,6 @@ const all = async (salonId, branchId, status) => {
     const newDeals = await Promise.all(deals.map((deal) => {
       return { ...deal._doc, dealStartDate: moment(deal._doc.dealStartDate).format(DATETIMEFORMAT), dealEndDate: moment(deal._doc.dealEndDate).format(DATETIMEFORMAT) }
     }))
-
-    console.log('newDeal', newDeals);
     return { status: httpStatus.OK, data: newDeals };
   } catch (error) {
     console.log(error);
@@ -30,10 +28,10 @@ const create = async (data) => {
 
 const update = async (data) => {
   try {
-
+    console.log('date', new Date(data.dealStartDate), new Date(data.dealEndDate));
     await global.salons[data.salonId].Deals.findByIdAndUpdate(
       data.id || data._id,
-      data
+      { ...data, dealStartDate: new Date(data.dealStartDate), dealEndDate: new Date(data.dealEndDate) }
     );
     return { status: httpStatus.OK, message: "Deals Updated Successfully" };
   } catch (error) {

@@ -14,9 +14,25 @@ const httpStatus = require('http-status');
 const salonRoutes = require('./routes//backEnd/salon')
 const websiteRoutes = require('./routes/frontEnd')
 const { authLimiter } = require('./middlewares/rateLimiter');
-
+const socketIO = require('socket.io')
+const http = require('http')
 
 const app = express();
+
+const socketServer = http.createServer(app)
+socketServer.listen('4002', () => {
+  console.log('listening on socket server at 4002');
+})
+const io = socketIO(socketServer, {
+  cors: {
+    origin: '*'
+  }
+})
+const activeUsers = new Set();
+
+let roomId = "";
+
+
 
 app.use(morgan.successHandler);
 app.use(morgan.errorHandler);
@@ -59,6 +75,31 @@ app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/salon', salonRoutes)
 app.use('/api', websiteRoutes)
 
+io.on("connection", (socket) => {
+  console.log('connection open');
+  // Joining room for conversation
+  socket.on("JOIN_ROOM", (room) => {
+    console.log('join room', room);
+    roomId = room;
+    socket.join(room);
+  });
+
+  // Listen to NEW_MESSAGE for receiving new messages
+  socket.on("SEND_TO_CUSTOMER_VIEW", (msg) => {
+    io.to(roomId).emit("SEND_TO_CUSTOMER_VIEW", msg);
+  });
+
+  socket.on("SEND_TO_ADMIN_VIEW", (msg) => {
+    io.to(roomId).emit("SEND_TO_ADMIN_VIEW", msg);
+  });
+
+  socket.on("disconnect", () => {
+    activeUsers.delete(socket.userId);
+
+    // Triggering this event disconnects user
+    io.to(roomId).emit("user disconnected", socket.userId);
+  });
+});
 // app.use((req, res, next) => {
 //   console.log(global.restaurants);
 //   return next()
