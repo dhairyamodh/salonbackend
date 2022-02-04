@@ -23,8 +23,10 @@ const all = async (salonId, branchId, start, end) => {
   }
 };
 
-const getFilterBookings = async (salonId, salonUserId, data) => {
+const getFilterBookings = async (data) => {
   try {
+    const salonId = data.salonId
+    const salonUserId = data.userId
     const startDate = data.date.start.split("T")[0];
     const endDate = data.date.end.split("T")[0];
 
@@ -146,6 +148,18 @@ const applyCoupon = async (db, data) => {
   }
 }
 
+const getOrderCount = async (data) => {
+  try {
+    console.log('data', data);
+    const orders = await global.salons[data.salonId].Order.find({ isSeen: false }).count();
+    console.log('orders', orders);
+    return { status: httpStatus.OK, data: orders };
+  } catch (error) {
+    console.log(error);
+    return { status: httpStatus.INTERNAL_SERVER_ERROR, message: error };
+  }
+};
+
 module.exports = {
   create,
   all,
@@ -153,5 +167,6 @@ module.exports = {
   remove,
   getFilterBookings,
   checkoutOrder,
-  applyCoupon
+  applyCoupon,
+  getOrderCount
 };

@@ -6,6 +6,11 @@ const login = catchAsync(async (req, res) => {
     return res.status(result.status).send(result)
 })
 
+const mobileLogin = catchAsync(async (req, res) => {
+    const result = await authService.mobileLogin(req.body);
+    return res.status(result.status).send(result)
+})
+
 const details = catchAsync(async (req, res) => {
     const result = await authService.details(req.userId);
     return res.status(200).send(result)
@@ -22,5 +27,5 @@ const changeForgotPassword = catchAsync(async (req, res) => {
 })
 
 module.exports = {
-    login, details, forgotpassword, changeForgotPassword
+    login, details, forgotpassword, changeForgotPassword, mobileLogin
 };

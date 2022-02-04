@@ -15,7 +15,8 @@ const salonRoutes = require('./routes//backEnd/salon')
 const websiteRoutes = require('./routes/frontEnd')
 const { authLimiter } = require('./middlewares/rateLimiter');
 const socketIO = require('socket.io')
-const http = require('http')
+const http = require('http');
+const { orderService } = require('./services/backEnd/salon');
 
 const app = express();
 
@@ -93,9 +94,18 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("SEND_TO_ADMIN_VIEW", msg);
   });
 
+  socket.on("GET_BOOKINGS", async (msg) => {
+    const bookings = await orderService.getFilterBookings(msg)
+    io.to(roomId).emit("SEND_BOOKINGS", bookings.data);
+  });
+
+  socket.on("GET_BOOKING_COUNT", async (msg) => {
+    const bookings = await orderService.getOrderCount(msg)
+    io.emit("SEND_BOOKING_COUNT", bookings.data);
+  });
+
   socket.on("disconnect", () => {
     activeUsers.delete(socket.userId);
-
     // Triggering this event disconnects user
     io.to(roomId).emit("user disconnected", socket.userId);
   });

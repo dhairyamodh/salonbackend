@@ -135,9 +135,28 @@ const changeForgotPassword = async (data) => {
   }
 };
 
+
+
+const mobileLogin = async (data) => {
+  try {
+    const user = await User.findOne({ mobile: data.mobile });
+    if (!user) {
+      return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "User does not exist" });
+    }
+    const token = jwt.sign({ _id: user._id, salon: user.salonId }, process.env.JWT_SECRET);
+    return ({ status: httpStatus.OK, user: user, token: token, message: "Login Success" });
+  } catch (error) {
+    console.log(error);
+    return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "Failed to login" });
+
+  }
+
+}
+
 module.exports = {
   login,
   details,
   forgotpassword,
   changeForgotPassword,
+  mobileLogin
 };

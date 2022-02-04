@@ -38,11 +38,9 @@ const register = async (data) => {
 const login = async (data) => {
     try {
         const user = await User.findOne({ email: data.email });
-
         if (!user) {
             return ({ status: httpStatus.INTERNAL_SERVER_ERROR, message: "User does not exist" });
         }
-
         const validPassword = await bcrypt.compare(data.password, user.password);
         if (!validPassword)
             return ({ status: httpStatus.NOT_FOUND, message: "Incorrect password" });
@@ -57,6 +55,8 @@ const login = async (data) => {
     }
 
 }
+
+
 
 const details = async (data) => {
     try {
@@ -141,5 +141,5 @@ const getBookings = async (userId, data) => {
 
 
 module.exports = {
-    register, login, details, forgotpassword, changeForgotPassword, updateDetails, getBookings
+    register, login, details, forgotpassword, changeForgotPassword, updateDetails, getBookings,
 }

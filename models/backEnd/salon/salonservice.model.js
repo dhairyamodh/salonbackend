@@ -45,6 +45,10 @@ const salonServiceSchema = mongoose.Schema(
             type: Boolean,
             default: false
         },
+        taxable: {
+            type: Boolean,
+            default: true
+        },
         status: {
             type: Boolean,
             default: true

@@ -21,11 +21,10 @@ router.post("/register", async (req, res) => {
   await User.create({ ...data, password: hashPassword });
   res.send({ status: httpStatus.OK, message: "Created admin" });
 });
-router.post(
-  "/login",
-  validate(authValidation.adminlogin),
-  authController.login
-);
+router.post("/login", validate(authValidation.adminlogin), authController.login);
+
+router.post("/mobilelogin", authController.mobileLogin);
+
 router.get("/details", verify, authController.details);
 router.post("/forgotpassword", authController.forgotpassword);
 router.put("/forgotpassword", authController.changeForgotPassword);

@@ -6,9 +6,11 @@ const all = async (salonId, branchId, salonUserId, status) => {
   try {
     const data = {
       ...(salonId != "all" && { salonId: ObjectId(salonId) }),
-      ...(branchId != "all" && { branchId: ObjectId(branchId) }),
+      ...(branchId && { branchId: ObjectId(branchId) }),
       ...status,
     };
+    console.log('getAllEmployees', data);
+
     let users = [];
     if (salonId == "all") {
       await Promise.all(

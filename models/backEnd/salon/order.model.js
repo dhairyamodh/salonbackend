@@ -127,8 +127,11 @@ const orderSchema = mongoose.Schema(
         tipPercentage: {
             type: Number,
             required: false,
+        },
+        isSeen: {
+            type: Boolean,
+            default: false
         }
-
 
     },
     {
